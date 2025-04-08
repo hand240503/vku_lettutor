@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/l10n/app_localizations.dart';
 import 'package:lettutor/pages/login_page/login_page.dart';
+import 'package:lettutor/pages/signUpPage/sign-up_page.dart';
+import 'package:lettutor/providers/auth_provider.dart';
 import 'package:lettutor/providers/setting_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -9,6 +11,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => SettingsProvider()),
+        ChangeNotifierProvider(create: (context) => AuthProvider()),
       ],
       child: const MyApp(),
     ),
@@ -26,7 +29,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const LoginPage(),
+      initialRoute: '/loginPage',
+      routes: {
+        '/loginPage': (context) => const LoginPage(),
+        '/signupPage': (context) => const SignUpPage(),
+      },
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: Provider.of<SettingsProvider>(context).locale,
