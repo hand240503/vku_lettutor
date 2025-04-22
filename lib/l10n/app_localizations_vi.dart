@@ -153,7 +153,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get editRequest => 'Chỉnh sửa yêu cầu';
 
   @override
-  String get studentRequestEmpty => 'Hiện tại bạn chưa có yêu cầu nào cho lớp học';
+  String get studentRequestEmpty =>
+      'Hiện tại bạn chưa có yêu cầu nào cho lớp học';
 
   @override
   String get reasonCancelBooking => 'Lý do huỷ lớp học của bạn ?';
@@ -231,7 +232,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get discoverCourse => 'Khám phá khóa học';
 
   @override
-  String get discoverCourseSubTitle => 'LiveTutor đã xây dựng nên các khóa học của các lĩnh vực trong cuộc sống chất lượng, bài bản và khoa học nhất cho những người đang có nhu cầu trau dồi thêm kiến thức về các lĩnh vực.';
+  String get discoverCourseSubTitle =>
+      'LiveTutor đã xây dựng nên các khóa học của các lĩnh vực trong cuộc sống chất lượng, bài bản và khoa học nhất cho những người đang có nhu cầu trau dồi thêm kiến thức về các lĩnh vực.';
 
   @override
   String get interactiveBook => 'Sách tương tác';
@@ -255,7 +257,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get submit => 'Gửi';
 
   @override
-  String get historySubTitle => 'Đây là danh sách các bài học bạn đã tham gia. Bạn có thể xem lại thông tin chi tiết về các buổi học đã tham gia đã tham gia';
+  String get historySubTitle =>
+      'Đây là danh sách các bài học bạn đã tham gia. Bạn có thể xem lại thông tin chi tiết về các buổi học đã tham gia đã tham gia';
 
   @override
   String get bookingTime => 'Thời gian học';
@@ -267,7 +270,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get bookingDetails => 'Chi tiết đặt hẹn';
 
   @override
-  String get bookingCanOnlyMade => 'Lịch hẹn chỉ có thể đặt trong 7 ngày gần nhất';
+  String get bookingCanOnlyMade =>
+      'Lịch hẹn chỉ có thể đặt trong 7 ngày gần nhất';
 
   @override
   String get payment => 'Thanh toán';
@@ -318,7 +322,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get goToMeeting => 'Vào lớp học';
 
   @override
-  String get hereIsAList => 'Đây là danh sách các lớp học dã được đặt. Bạn có thể theo dõi khi nào lớp học bắt đầu, vào lớp hoặc huỷ bỏ trước 2 tiếng';
+  String get hereIsAList =>
+      'Đây là danh sách các lớp học dã được đặt. Bạn có thể theo dõi khi nào lớp học bắt đầu, vào lớp hoặc huỷ bỏ trước 2 tiếng';
 
   @override
   String get wentWrong => 'Rất tiếc đã xảy ra lỗi';
@@ -387,7 +392,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get tutorDescription => 'Tìm gia sư cho buổi học 1 kèm 1 riêng';
 
   @override
-  String get courseDescription => 'Hoặc tự khám phá với thư viện bài giảng của chúng tôi';
+  String get courseDescription =>
+      'Hoặc tự khám phá với thư viện bài giảng của chúng tôi';
 
   @override
   String get onlineTutors => 'Danh sách gia sư';
@@ -552,7 +558,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get studySchedule => 'Lịch học';
 
   @override
-  String get noteTheTime => 'Ghi chú thời gian biểu rảnh rỗi để học/dạy của bạn';
+  String get noteTheTime =>
+      'Ghi chú thời gian biểu rảnh rỗi để học/dạy của bạn';
 
   @override
   String get saveChanges => 'Lưu thay đổi';
@@ -576,5 +583,6 @@ class AppLocalizationsVi extends AppLocalizations {
   String get noAvailableSchedule => 'Chưa có lịch hẹn';
 
   @override
-  String get eWalletNotAvailable => 'Ví điện tử chưa được hỗ trợ trong phiên bản này, hãy truy cập website của chúng tôi để biết thêm thông tin.';
+  String get eWalletNotAvailable =>
+      'Ví điện tử chưa được hỗ trợ trong phiên bản này, hãy truy cập website của chúng tôi để biết thêm thông tin.';
 }
