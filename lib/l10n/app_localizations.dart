@@ -338,7 +338,7 @@ abstract class AppLocalizations {
   /// No description provided for @enterLessonRoom.
   ///
   /// In en, this message translates to:
-  /// **'Enter lesson room'**
+  /// **'Enter room'**
   String get enterLessonRoom;
 
   /// No description provided for @started.

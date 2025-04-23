@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../l10n/app_localizations.dart';
 
@@ -32,15 +33,13 @@ class _BannerComponentState extends State<BannerComponent> {
             ),
           ),
           SizedBox(height: 16),
-          (false)
+          (true)
               ? Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(width: 10),
-                  // Expanded(
-                  //   // child: buildTimer(context),
-                  // ),
+                  Expanded(child: buildTimer(context)),
                   SizedBox(width: 10), // Adjusted this SizedBox
                   Expanded(
                     child: Container(
@@ -116,74 +115,67 @@ class _BannerComponentState extends State<BannerComponent> {
   }
 
   // Widget build Timer
-  // Widget buildTimer(BuildContext context) {
-  //   BookingProvider bookingProvider = context.watch<BookingProvider>();
+  Widget buildTimer(BuildContext context) {
+    // Dữ liệu tĩnh cho thời gian bắt đầu và kết thúc
+    final startTimestamp =
+        1672531199000; // Ví dụ timestamp cho thời gian bắt đầu (thay bằng giá trị thực tế của bạn)
+    final endTimestamp =
+        1672534799000; // Ví dụ timestamp cho thời gian kết thúc (thay bằng giá trị thực tế của bạn)
 
-  //   return Column(
-  //     children: [
-  //       Text(
-  //         DateFormat('E, d MMM y').format(DateTime.fromMillisecondsSinceEpoch(
-  //             bookingProvider.upcomingLesson!.scheduleDetailInfo!
-  //                 .startPeriodTimestamp!)) +
-  //             '\n' +
-  //             DateFormat('HH:mm').format(DateTime.fromMillisecondsSinceEpoch(
-  //                 bookingProvider.upcomingLesson!.scheduleDetailInfo!
-  //                     .startPeriodTimestamp!)) +
-  //             ' - ' +
-  //             DateFormat('HH:mm').format(DateTime.fromMillisecondsSinceEpoch(
-  //                 bookingProvider.upcomingLesson!.scheduleDetailInfo!
-  //                     .endPeriodTimestamp!)),
-  //         style: TextStyle(
-  //           fontWeight: FontWeight.normal,
-  //           fontSize: 16,
-  //           color: Colors.white,
-  //         ),
-  //         textAlign: TextAlign.center,
-  //       ),
-  //       Wrap(
-  //         alignment: WrapAlignment.center,
-  //         children: [
-  //           Text(
-  //             '(starts in: ',
-  //             style: TextStyle(
-  //               fontWeight: FontWeight.normal,
-  //               fontSize: 14,
-  //               color: Colors.yellow,
-  //             ),
-  //           ),
-  //           CountdownTimer(
-  //             endTime: DateTime.fromMillisecondsSinceEpoch(bookingProvider
-  //                 .upcomingLesson!
-  //                 .scheduleDetailInfo!
-  //                 .startPeriodTimestamp!)
-  //                 .millisecondsSinceEpoch,
-  //             textStyle: TextStyle(
-  //               fontWeight: FontWeight.normal,
-  //               fontSize: 14,
-  //               color: Colors.yellow,
-  //             ),
-  //             endWidget: Text(
-  //               AppLocalizations.of(context)!.started,
-  //               style: TextStyle(
-  //                 fontWeight: FontWeight.normal,
-  //                 fontSize: 14,
-  //                 color: Colors.yellow,
-  //               ),
-  //             ),
-  //           ),
-  //           Text(
-  //             ')',
-  //             style: TextStyle(
-  //               fontWeight: FontWeight.normal,
-  //               fontSize: 14,
-  //               color: Colors.yellow,
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ],
-  //   );
-  // }
+    // Chuyển đổi timestamp thành ngày và giờ
+    final startDate = DateFormat(
+      'E, d MMM y',
+    ).format(DateTime.fromMillisecondsSinceEpoch(startTimestamp));
+    final startTime = DateFormat(
+      'HH:mm',
+    ).format(DateTime.fromMillisecondsSinceEpoch(startTimestamp));
+    final endTime = DateFormat(
+      'HH:mm',
+    ).format(DateTime.fromMillisecondsSinceEpoch(endTimestamp));
+
+    return Column(
+      children: [
+        Text(
+          '$startDate\n$startTime - $endTime',
+          style: TextStyle(
+            fontWeight: FontWeight.normal,
+            fontSize: 16,
+            color: Colors.white,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        Wrap(
+          alignment: WrapAlignment.center,
+          children: [
+            Text(
+              '(starts in: ',
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+                fontSize: 14,
+                color: Colors.yellow,
+              ),
+            ),
+            Text(
+              '---', // Hiển thị dấu ba gạch chéo thay vì đồng hồ đếm ngược
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+                fontSize: 14,
+                color: Colors.yellow,
+              ),
+            ),
+            Text(
+              ')',
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+                fontSize: 14,
+                color: Colors.yellow,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 
   // void joinUpcomingMeeting(BuildContext context) {
   //   BookingProvider bookingProvider = context.read<BookingProvider>();

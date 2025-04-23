@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lettutor/common/app_bar.dart';
 import 'package:lettutor/pages/list_teacher_page/components/banner_component.dart';
 import 'package:lettutor/pages/list_teacher_page/components/filter_component.dart';
-import 'package:number_paginator/number_paginator.dart';
 
 class ListTeacherPage extends StatefulWidget {
   const ListTeacherPage({super.key});
@@ -15,7 +14,16 @@ class _ListTeacherPageState extends State<ListTeacherPage> {
   late Color myColor;
   late Size mediaSize;
 
-  bool _isLoadingPagination = false;
+  final bool _isLoadingPagination = false;
+
+  void onSearch(
+    String tutorName,
+    List<String> specialities,
+    Map<String, bool> nationalities,
+  ) {
+    print("Searching with: $tutorName, $specialities, $nationalities");
+    // Thực hiện các thao tác tìm kiếm tại đây, ví dụ gọi API, lọc dữ liệu, v.v.
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +38,16 @@ class _ListTeacherPageState extends State<ListTeacherPage> {
           children: [
             BannerComponent(myColor: myColor),
             FilterComponent(
-              onSearch: (searchTutor, specialities, nationality) {
-                //    // Gọi API tìm kiếm ở đây nếu cần
+              onSearch: (
+                String name,
+                List<String> specialities,
+                Map<String, bool> nationality,
+              ) {
+                // Logic xử lý tìm kiếm
+                print("Searching with:");
+                print("Name: $name");
+                print("Specialities: $specialities");
+                print("Nationalities: $nationality");
               },
             ),
             Container(
@@ -42,29 +58,23 @@ class _ListTeacherPageState extends State<ListTeacherPage> {
                 thickness: 1,
               ),
             ),
-            // !_isLoadingPagination
-            // ListTeacherComponent(),
-            //     : const SizedBox(
-            //       child: Center(child: CircularProgressIndicator()),
-            //     ),
-            Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(16),
-              child: NumberPaginator(
-                numberPages: 5, // Ví dụ 5 trang
-                onPageChange: (int index) {
-                  setState(() {
-                    _isLoadingPagination = true;
-                  });
-                  // Gọi API lấy danh sách giáo viên ở đây nếu cần
-                  Future.delayed(const Duration(seconds: 2), () {
-                    setState(() {
-                      _isLoadingPagination = false;
-                    });
-                  });
-                },
-              ),
-            ),
+            // Container(
+            //   alignment: Alignment.center,
+            //   padding: const EdgeInsets.all(16),
+            //   child: NumberPaginator(
+            //     numberPages: 5, // Ví dụ 5 trang
+            //     onPageChange: (int index) {
+            //       setState(() {
+            //         _isLoadingPagination = true;
+            //       });
+            //       Future.delayed(const Duration(seconds: 2), () {
+            //         setState(() {
+            //           _isLoadingPagination = false;
+            //         });
+            //       });
+            //     },
+            //   ),
+            // ),
           ],
         ),
       ),

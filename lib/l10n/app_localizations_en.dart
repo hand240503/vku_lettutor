@@ -129,7 +129,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get teachingExperience => 'Teaching experience';
 
   @override
-  String get enterLessonRoom => 'Enter lesson room';
+  String get enterLessonRoom => 'Enter room';
 
   @override
   String get started => 'Started';
