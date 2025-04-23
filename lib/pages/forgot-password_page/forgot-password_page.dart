@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-
+import '../../common/loading_overlay.dart';
 import '../../l10n/app_localizations.dart';
 import '../../providers/auth_provider.dart';
+//import '../../providers/user_provider.dart';
 import '../../providers/setting_provider.dart';
 import '../../utilities/validator.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+
+class ForgotPasswordPage extends StatefulWidget {
+  const ForgotPasswordPage({super.key});
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late Color myColor;
   late Size mediaSize;
   TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
   bool rememberUser = false;
+
+  bool loading = true;
   bool _isLocaleVietnamese = true;
 
   void _toggleLanguage() {
@@ -118,21 +120,25 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget _buildForm() {
+    //var userProvider = Provider.of<UserProvider>(context);
     return Form(
       key: _formKey,
       autovalidateMode: AutovalidateMode.always,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            AppLocalizations.of(context)!.title,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: myColor, fontSize: 32, fontWeight: FontWeight.w700),
+          Container(
+            alignment: Alignment.center,
+            child: Text(
+              AppLocalizations.of(context)!.resetPassword,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: myColor, fontSize: 32, fontWeight: FontWeight.w700),
+            ),
           ),
           const SizedBox(height: 16),
-           Text(
-            AppLocalizations.of(context)!.descriptionTitle,
+          Text(
+            AppLocalizations.of(context)!.forgotPasswordTitle,
             textAlign: TextAlign.center,
             style: TextStyle(
                 color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
@@ -141,20 +147,8 @@ class _SignUpPageState extends State<SignUpPage> {
           _buildGreyText("EMAIL"),
           const SizedBox(height: 8),
           _buildInputField(emailController, 'mail@example.com', validator: Validator.validateEmail),
-          const SizedBox(height: 16),
-          _buildGreyText("PASSWORD"),
-          const SizedBox(height: 8),
-          _buildInputField(passwordController, AppLocalizations.of(context)!.hintPassword,
-              isPassword: true, validator: Validator.validatePassword),
-          const SizedBox(height: 16),
-          _buildGreyText("CONFIRM PASSWORD"),
-          const SizedBox(height: 8),
-          _buildInputField(confirmPasswordController, AppLocalizations.of(context)!.confirmPassword,
-              isPassword: true, validator: Validator.validateConfirmPassword, isConfirmPassword: true),
           const SizedBox(height: 12),
-          _buildPrimaryColorText(AppLocalizations.of(context)!.forgotPassword),
-          const SizedBox(height: 12),
-          _buildSignUpButton(),
+          _buildResetButton(),
           const SizedBox(height: 24),
           _buildOtherLogin(),
         ],
@@ -176,12 +170,12 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget _buildInputField(TextEditingController controller, String hintText,
-      {isPassword = false, Function? validator, isConfirmPassword}) {
+      {isPassword = false, Function? validator}) {
     return TextFormField(
-      controller: controller,
       validator: (value) {
-        return isConfirmPassword ?? false ? validator!( passwordController.text, value) : validator!(value ?? "");
+        return validator!(value ?? "");
       },
+      controller: controller,
       decoration: InputDecoration(
         border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(8.0))),
@@ -195,13 +189,14 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _buildSignUpButton() {
-    var authProvider = Provider.of<AuthProvider>(context, listen: false);
+  Widget _buildResetButton() {
+    var authProvider = Provider.of<AuthProvider>(context);
     return ElevatedButton(
       onPressed: () {
         if (_formKey.currentState!.validate()) {
-          //handleCreateAccount(authProvider);
+          //handleResetPassword(authProvider);
         }
+
       },
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(
@@ -210,9 +205,13 @@ class _SignUpPageState extends State<SignUpPage> {
         backgroundColor: const Color.fromRGBO(4, 104, 211, 1.0),
         minimumSize: const Size.fromHeight(52),
       ),
-      child:  Text(
-        AppLocalizations.of(context)!.signUp.toUpperCase(),
-        style: TextStyle(fontSize: 20),
+      child: Text(
+        AppLocalizations.of(context)!.resetLink.toUpperCase(),
+        style: const TextStyle(
+            fontSize: 20,
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
@@ -253,13 +252,33 @@ class _SignUpPageState extends State<SignUpPage> {
           const SizedBox(height: 16),
           GestureDetector(
             onTap: (){
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/signUpPage');
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildGreyText(AppLocalizations.of(context)!.dontHaveAccount),
+                Text(
+                  AppLocalizations.of(context)!.signUp,
+                  style: TextStyle(
+                      color: myColor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500),),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          GestureDetector(
+            onTap: (){
               Navigator.pushNamed(context, '/loginPage');
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildGreyText(AppLocalizations.of(context)!.alreadyHaveAccount),
-                Text(AppLocalizations.of(context)!.login,
+                Text(
+                    AppLocalizations.of(context)!.login,
                     style: TextStyle(
                         color: myColor,
                         fontSize: 12,
@@ -271,4 +290,23 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
     );
   }
+
+  // handle forgot password
+  // void handleResetPassword(AuthProvider authProvider) async {
+  //   LoadingOverlay.of(context).show();
+  //   try {
+  //     await authProvider.authRepository.forgotPassword(
+  //         email: emailController.text,
+  //         showMessage: (e) {
+  //           ScaffoldMessenger.of(context).showSnackBar(
+  //             SnackBar(content: Text(e.toString())),
+  //           );
+  //         }
+  //     );
+  //   }
+  //   finally {
+  //     LoadingOverlay.of(context).hide();
+  //   }
+  // }
 }
+

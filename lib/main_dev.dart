@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/l10n/app_localizations.dart';
+import 'package:lettutor/pages/forgot-password_page/forgot-password_page.dart';
 import 'package:lettutor/pages/login_page/login_page.dart';
-import 'package:lettutor/pages/signUpPage/sign-up_page.dart';
+import 'package:lettutor/pages/sign-up_page/sign-up_page.dart';
 import 'package:lettutor/providers/auth_provider.dart';
 import 'package:lettutor/providers/setting_provider.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +33,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/loginPage',
       routes: {
         '/loginPage': (context) => const LoginPage(),
-        '/signupPage': (context) => const SignUpPage(),
+        '/signUpPage': (context) => const SignUpPage(),
+        '/forgotPasswordPage': (context) => const ForgotPasswordPage(),
       },
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
