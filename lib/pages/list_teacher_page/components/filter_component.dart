@@ -173,48 +173,48 @@ class _FilterComponentState extends State<FilterComponent> {
                   alignment: Alignment.centerLeft,
                   child: Column(
                     children: [
-                      Wrap(
-                        spacing: 8.0,
-                        children:
-                            specialities.map((option) {
-                              final isSelected = selectedSpeciality == option;
-                              return FilterChip(
-                                backgroundColor: Colors.grey.shade300,
-                                label: Text(
-                                  option,
-                                  style: TextStyle(
-                                    color:
-                                        isSelected
-                                            ? Colors.white
-                                            : Colors.black,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                ),
-                                selected: isSelected,
-                                onSelected: (isSelected) {
-                                  setState(() {
-                                    if (isSelected) {
-                                      selectedSpeciality = option;
-                                      widget.onSearch(
-                                        tutorNameController.text,
-                                        convertSpeciality(selectedSpeciality),
-                                        convertNation(selectedNationalities),
-                                      );
-                                    } else {
-                                      selectedSpeciality = 'All';
-                                      widget.onSearch(
-                                        tutorNameController.text,
-                                        [],
-                                        convertNation(selectedNationalities),
-                                      );
-                                    }
-                                  });
-                                },
-                                selectedColor: Colors.blue.shade500,
-                                checkmarkColor: Colors.white,
-                              );
-                            }).toList(),
-                      ),
+                      // Wrap(
+                      //   spacing: 8.0,
+                      //   children:
+                      //       specialities.map((option) {
+                      //         final isSelected = selectedSpeciality == option;
+                      //         return FilterChip(
+                      //           backgroundColor: Colors.grey.shade300,
+                      //           label: Text(
+                      //             option,
+                      //             style: TextStyle(
+                      //               color:
+                      //                   isSelected
+                      //                       ? Colors.white
+                      //                       : Colors.black,
+                      //               fontWeight: FontWeight.normal,
+                      //             ),
+                      //           ),
+                      //           selected: isSelected,
+                      //           onSelected: (isSelected) {
+                      //             setState(() {
+                      //               if (isSelected) {
+                      //                 selectedSpeciality = option;
+                      //                 widget.onSearch(
+                      //                   tutorNameController.text,
+                      //                   convertSpeciality(selectedSpeciality),
+                      //                   convertNation(selectedNationalities),
+                      //                 );
+                      //               } else {
+                      //                 selectedSpeciality = 'All';
+                      //                 widget.onSearch(
+                      //                   tutorNameController.text,
+                      //                   [],
+                      //                   convertNation(selectedNationalities),
+                      //                 );
+                      //               }
+                      //             });
+                      //           },
+                      //           selectedColor: Colors.blue.shade500,
+                      //           checkmarkColor: Colors.white,
+                      //         );
+                      //       }).toList(),
+                      // ),
                     ],
                   ),
                 ),

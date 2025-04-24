@@ -1,18 +1,25 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:lettutor/firebase_options.dart';
 import 'package:lettutor/l10n/app_localizations.dart';
 import 'package:lettutor/pages/list_teacher_page/list_teacher_page.dart';
 import 'package:lettutor/pages/login_page/login_page.dart';
 import 'package:lettutor/pages/signUpPage/sign-up_page.dart';
 import 'package:lettutor/providers/auth_provider.dart';
 import 'package:lettutor/providers/setting_provider.dart';
+import 'package:lettutor/providers/tutor_provider.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => SettingsProvider()),
         ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider(create: (context) => TutorProvider()),
       ],
       child: const MyApp(),
     ),

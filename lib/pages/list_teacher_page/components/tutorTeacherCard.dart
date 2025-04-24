@@ -1,6 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:lettutor/data/model/tutor/tutor.dart';
+import 'package:provider/provider.dart';
+
+import '../../../data/model/tutor/tutor.dart';
+import '../../../providers/tutor_provider.dart';
 
 class TutorTeacherCard extends StatefulWidget {
   final Tutor tutor;
@@ -28,8 +31,8 @@ class _TutorTeacherCardState extends State<TutorTeacherCard> {
 
   @override
   Widget build(BuildContext context) {
-    // TutorProvider tutorProvider = context.watch<TutorProvider>();
-    List<String> specialties = ['Math', 'Science', 'History', 'English'];
+    TutorProvider tutorProvider = context.watch<TutorProvider>();
+
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(
@@ -68,30 +71,6 @@ class _TutorTeacherCardState extends State<TutorTeacherCard> {
                               "https://sandbox.api.lettutor.com/avatar/f569c202-7bbf-4620-af77-ecc1419a6b28avatar1700296337596.jpg",
                             ),
                       ),
-                    ),
-                  ),
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: IconButton(
-                      icon: Icon(
-                        // tutorProvider.checkIfTutorIsFavored(widget.tutor!)
-                        //     ? Icons.favorite
-                        //     : Icons.favorite_border_rounded,
-                        // color:
-                        //     tutorProvider.checkIfTutorIsFavored(widget.tutor!)
-                        //         ? Colors.red
-                        //         : null,
-                        Icons.favorite,
-                        color: Colors.red,
-                      ),
-                      onPressed: () {
-                        widget.onClickFavorite();
-                        setState(() {
-                          _isFavored = !_isFavored;
-                        });
-                      },
-                      color: Colors.blueAccent,
                     ),
                   ),
                 ],
@@ -142,33 +121,7 @@ class _TutorTeacherCardState extends State<TutorTeacherCard> {
                   ),
               ],
             ),
-            Container(
-              alignment: Alignment.centerLeft,
-              child: Wrap(
-                spacing: 8.0,
-                children:
-                    specialties.map((label) {
-                      return FilterChip(
-                        backgroundColor: Colors.lightBlue.shade100, // Màu nền
-                        label: Text(
-                          label, // Nội dung chip
-                          style: const TextStyle(
-                            color: Colors.blueAccent, // Màu chữ
-                            fontWeight: FontWeight.normal, // Định dạng chữ
-                          ),
-                        ),
-                        onSelected: (bool selected) {
-                          // Xử lý khi chọn chip (nếu cần)
-                          print('$label selected: $selected');
-                        },
-                        selected: false, // Trạng thái mặc định là không chọn
-                      );
-                    }).toList(),
-              ),
-            ),
-
             SizedBox(height: 10),
-
             SizedBox(height: 32),
             ElevatedButton(
               onPressed: () {

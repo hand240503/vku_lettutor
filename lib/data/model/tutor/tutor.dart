@@ -25,12 +25,11 @@ class Tutor {
     this.rating,
   });
 
-  // Factory method to create a Tutor instance from Firestore DocumentSnapshot
   factory Tutor.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
     return Tutor(
-      id: doc.id,  // Firebase Document ID
+      id: doc.id, // Firebase Document ID
       email: data['email'],
       name: data['name'],
       avatar: data['avatar'],
@@ -39,30 +38,12 @@ class Tutor {
       language: data['language'],
       isActivated: data['isActivated'],
       isOnline: data['isOnline'],
-      rating: data['rating']?.toDouble(),  // Ensure it's double if necessary
+      rating: data['rating']?.toDouble(),
     );
   }
 
-  // Factory method to create a Tutor instance from a JSON map
-  factory Tutor.fromJson(Map<String, dynamic> json) {
-    return Tutor(
-      id: json['id'],
-      email: json['email'],
-      name: json['name'],
-      avatar: json['avatar'],
-      country: json['country'],
-      phone: json['phone'],
-      language: json['language'],
-      isActivated: json['isActivated'],
-      isOnline: json['isOnline'],
-      rating: json['rating']?.toDouble(),
-    );
-  }
-
-  // Method to convert a Tutor instance to a JSON map
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toFirestore() {
     return {
-      'id': id,
       'email': email,
       'name': name,
       'avatar': avatar,
@@ -75,3 +56,4 @@ class Tutor {
     };
   }
 }
+
