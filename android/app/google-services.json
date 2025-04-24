@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "731785687567",
+    "project_id": "project-vku-3",
+    "storage_bucket": "project-vku-3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:731785687567:android:9fe28bd682f4558b3c297a",
+        "android_client_info": {
+          "package_name": "com.example.lettutor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA25J6o1OHUB43LcQuRvz-FgsndKoXd4d0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
