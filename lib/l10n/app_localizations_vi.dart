@@ -577,4 +577,13 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get eWalletNotAvailable => 'Ví điện tử chưa được hỗ trợ trong phiên bản này, hãy truy cập website của chúng tôi để biết thêm thông tin.';
+
+  @override
+  String get resetPassword => 'Đặt lại mật khẩu';
+
+  @override
+  String get forgotPasswordTitle => 'Vui lòng nhập địa chỉ email của bạn để tìm tài khoản của bạn.';
+
+  @override
+  String get resetLink => 'Gửi liên kết đặt lại';
 }

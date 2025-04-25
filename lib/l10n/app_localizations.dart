@@ -1234,6 +1234,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'E-wallet is not supported in this version, please access to our website for more info'**
   String get eWalletNotAvailable;
+
+  /// No description provided for @resetPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Password'**
+  String get resetPassword;
+
+  /// No description provided for @forgotPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your email address to search for your account.'**
+  String get forgotPasswordTitle;
+
+  /// No description provided for @resetLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Send reset link'**
+  String get resetLink;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
