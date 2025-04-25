@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lettutor/router/app_routes.dart';
 import 'package:provider/provider.dart';
 
 import '../../l10n/app_localizations.dart';
@@ -155,7 +156,7 @@ class _SignUpPageState extends State<SignUpPage> {
           GestureDetector(
             onTap: () {
               // TODO: Tạo màn hình ForgotPasswordPage và thêm vào routes.
-              Navigator.pushNamed(context, '/forgotPasswordPage');
+              Navigator.pushNamed(context, AppRoutes.forgotPassword);
             },
             child: _buildPrimaryColorText(
               AppLocalizations.of(context)!.forgotPassword,
@@ -265,7 +266,7 @@ class _SignUpPageState extends State<SignUpPage> {
           const SizedBox(height: 16),
           GestureDetector(
             onTap: (){
-              Navigator.pushNamed(context, '/loginPage');
+              Navigator.pushNamed(context, AppRoutes.login);
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,

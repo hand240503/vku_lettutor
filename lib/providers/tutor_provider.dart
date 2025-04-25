@@ -67,15 +67,23 @@ class TutorProvider with ChangeNotifier {
         pageIndex: pageIndex,
         pageSize: pageSize,
         onSuccess: (List<Tutor> data) {
-          _tutors
-            ..clear()
-            ..addAll(data);
+          // Nếu trang không phải là trang đầu, chỉ cần thêm dữ liệu mới vào danh sách hiện tại.
+          if (pageIndex > 0) {
+            _tutors.addAll(data);
+          } else {
+            // Nếu là trang đầu, thay thế dữ liệu hiện tại bằng dữ liệu mới.
+            _tutors
+              ..clear()
+              ..addAll(data);
+          }
           notifyListeners();
         },
         onFail: (String error) {
           _tutors.clear();
           notifyListeners();
         },
+        lastDocument:
+            _lastDocument, // Truyền lastDocument vào để phân trang chính xác
       );
     } catch (e) {
       _tutors.clear();
@@ -96,5 +104,4 @@ class TutorProvider with ChangeNotifier {
       },
     );
   }
-
 }

@@ -38,7 +38,7 @@ class TutorRepository {
       if (tutors.isEmpty) {
         onFail("No more tutors found.");
       } else {
-        onSuccess(tutors, null);
+        onSuccess(tutors, snapshot.docs.isEmpty ? null : snapshot.docs.last);
       }
     } catch (e) {
       onFail("Error retrieving tutors: $e");
@@ -50,31 +50,29 @@ class TutorRepository {
     required int pageSize,
     required Function(List<Tutor>) onSuccess,
     required Function(String) onFail,
+    DocumentSnapshot? lastDocument,
   }) async {
     try {
       Query query = _firestore
           .collection('tutors')
           .orderBy(FieldPath.documentId)
-          .limit((pageIndex + 1) * pageSize);
+          .limit(pageSize);
+
+      if (lastDocument != null) {
+        query = query.startAfterDocument(
+          lastDocument,
+        ); // Start after the last document from the previous page
+      }
 
       QuerySnapshot snapshot = await query.get();
 
-      List<QueryDocumentSnapshot> docs = snapshot.docs;
-
-      if (docs.isEmpty) {
+      if (snapshot.docs.isEmpty) {
         onSuccess([]);
         return;
       }
 
-      final start = pageIndex * pageSize;
-      final end = start + pageSize;
-      final currentDocs = docs.sublist(
-        start < docs.length ? start : docs.length,
-        end < docs.length ? end : docs.length,
-      );
-
       List<Tutor> tutors =
-          currentDocs.map((doc) => Tutor.fromFirestore(doc)).toList();
+          snapshot.docs.map((doc) => Tutor.fromFirestore(doc)).toList();
 
       onSuccess(tutors);
     } catch (e) {
