@@ -164,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
           GestureDetector(
             onTap: () {
               // TODO: Tạo màn hình ForgotPasswordPage và thêm vào routes.
-              Navigator.pushNamed(context, '/');
+              Navigator.pushNamed(context, '/forgotPasswordPage');
             },
             child: _buildPrimaryColorText(
               AppLocalizations.of(context)!.forgotPassword,

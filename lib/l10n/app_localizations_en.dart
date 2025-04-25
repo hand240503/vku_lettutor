@@ -577,4 +577,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get eWalletNotAvailable => 'E-wallet is not supported in this version, please access to our website for more info';
+
+  @override
+  String get resetPassword => 'Reset Password';
+
+  @override
+  String get forgotPasswordTitle => 'Please enter your email address to search for your account.';
+
+  @override
+  String get resetLink => 'Send reset link';
 }

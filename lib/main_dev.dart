@@ -4,7 +4,7 @@ import 'package:lettutor/firebase_options.dart';
 import 'package:lettutor/l10n/app_localizations.dart';
 import 'package:lettutor/pages/list_teacher_page/list_teacher_page.dart';
 import 'package:lettutor/pages/login_page/login_page.dart';
-import 'package:lettutor/pages/signUpPage/sign-up_page.dart';
+import 'package:lettutor/pages/sign-up_page/sign-up_page.dart';
 import 'package:lettutor/providers/auth_provider.dart';
 import 'package:lettutor/providers/setting_provider.dart';
 import 'package:lettutor/providers/tutor_provider.dart';

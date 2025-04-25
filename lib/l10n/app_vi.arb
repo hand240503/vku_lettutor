@@ -201,7 +201,8 @@
   "confirmBooking": "Xác nhận đặt lịch",
   "noUpcomingLesson": "Bạn không có lịch học sắp tới",
   "noAvailableSchedule": "Chưa có lịch hẹn",
-  "eWalletNotAvailable": "Ví điện tử chưa được hỗ trợ trong phiên bản này, hãy truy cập website của chúng tôi để biết thêm thông tin."
-
-
+  "eWalletNotAvailable": "Ví điện tử chưa được hỗ trợ trong phiên bản này, hãy truy cập website của chúng tôi để biết thêm thông tin.",
+  "resetPassword": "Đặt lại mật khẩu",
+  "forgotPasswordTitle": "Vui lòng nhập địa chỉ email của bạn để tìm tài khoản của bạn.",
+  "resetLink": "Gửi liên kết đặt lại"
 }
