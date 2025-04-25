@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lettutor/router/app_routes.dart';
 import 'package:provider/provider.dart';
-import '../../common/loading_overlay.dart';
+
 import '../../l10n/app_localizations.dart';
 import '../../providers/auth_provider.dart';
 //import '../../providers/user_provider.dart';
 import '../../providers/setting_provider.dart';
 import '../../utilities/validator.dart';
-
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -93,16 +93,16 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child:
-                    _isLocaleVietnamese
-                        ? SvgPicture.asset(
-                      'lib/assets/images/vietnam.svg',
-                      semanticsLabel: "My SVG",
-                      height: 22,
-                    )
-                        : SvgPicture.asset(
-                      'lib/assets/images/united-states.svg',
-                      height: 22,
-                    ),
+                        _isLocaleVietnamese
+                            ? SvgPicture.asset(
+                              'lib/assets/images/vietnam.svg',
+                              semanticsLabel: "My SVG",
+                              height: 22,
+                            )
+                            : SvgPicture.asset(
+                              'lib/assets/images/united-states.svg',
+                              height: 22,
+                            ),
                   ),
                 ),
               ),
@@ -133,7 +133,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               AppLocalizations.of(context)!.resetPassword,
               textAlign: TextAlign.center,
               style: TextStyle(
-                  color: myColor, fontSize: 32, fontWeight: FontWeight.w700),
+                color: myColor,
+                fontSize: 32,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
           const SizedBox(height: 16),
@@ -141,12 +144,19 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             AppLocalizations.of(context)!.forgotPasswordTitle,
             textAlign: TextAlign.center,
             style: TextStyle(
-                color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+              color: Colors.black,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 16),
           _buildGreyText("EMAIL"),
           const SizedBox(height: 8),
-          _buildInputField(emailController, 'mail@example.com', validator: Validator.validateEmail),
+          _buildInputField(
+            emailController,
+            'mail@example.com',
+            validator: Validator.validateEmail,
+          ),
           const SizedBox(height: 12),
           _buildResetButton(),
           const SizedBox(height: 24),
@@ -157,20 +167,26 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   }
 
   Widget _buildGreyText(String text) {
-    return Text(
-      text,
-      style: const TextStyle(color: Colors.grey),
-    );
+    return Text(text, style: const TextStyle(color: Colors.grey));
   }
 
   Widget _buildPrimaryColorText(String text) {
-    return Text(text,
-        style: TextStyle(
-            color: myColor, fontSize: 16, fontWeight: FontWeight.w400));
+    return Text(
+      text,
+      style: TextStyle(
+        color: myColor,
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+      ),
+    );
   }
 
-  Widget _buildInputField(TextEditingController controller, String hintText,
-      {isPassword = false, Function? validator}) {
+  Widget _buildInputField(
+    TextEditingController controller,
+    String hintText, {
+    isPassword = false,
+    Function? validator,
+  }) {
     return TextFormField(
       validator: (value) {
         return validator!(value ?? "");
@@ -178,7 +194,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       controller: controller,
       decoration: InputDecoration(
         border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8.0))),
+          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+        ),
         hintText: hintText,
         hintStyle: TextStyle(color: Colors.grey.shade400),
         isDense: true, // Added this
@@ -196,19 +213,19 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         if (_formKey.currentState!.validate()) {
           //handleResetPassword(authProvider);
         }
-
       },
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(
           // border radius
-            borderRadius: BorderRadius.circular(8)),
+          borderRadius: BorderRadius.circular(8),
+        ),
         backgroundColor: const Color.fromRGBO(4, 104, 211, 1.0),
         minimumSize: const Size.fromHeight(52),
       ),
       child: Text(
         AppLocalizations.of(context)!.resetLink.toUpperCase(),
         style: const TextStyle(
-            fontSize: 20,
+          fontSize: 20,
           color: Colors.white,
           fontWeight: FontWeight.bold,
         ),
@@ -225,35 +242,43 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Tab(icon: SvgPicture.asset("lib/assets/images/facebook-logo.svg")),
+              Tab(
+                icon: SvgPicture.asset("lib/assets/images/facebook-logo.svg"),
+              ),
               Tab(icon: SvgPicture.asset("lib/assets/images/google-logo.svg")),
               Padding(
                 padding: const EdgeInsets.only(left: 6),
                 child: MaterialButton(
-                    onPressed: () {},
-                    textColor: Colors.white,
-                    minWidth: 32,
-                    padding: const EdgeInsets.all(8),
-                    shape: CircleBorder(
-                        side: BorderSide(
-                            width: 1, style: BorderStyle.solid, color: myColor)),
-                    child: ClipRRect(
-                        borderRadius:
-                        BorderRadius.circular(10), // Adjust the radius as needed
-                        child: const Icon(
-                          Icons.phone_android,
-                          color: Colors.grey,
-                          size: 30,
-                        )
-                    )
+                  onPressed: () {},
+                  textColor: Colors.white,
+                  minWidth: 32,
+                  padding: const EdgeInsets.all(8),
+                  shape: CircleBorder(
+                    side: BorderSide(
+                      width: 1,
+                      style: BorderStyle.solid,
+                      color: myColor,
+                    ),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(
+                      10,
+                    ), // Adjust the radius as needed
+                    child: const Icon(
+                      Icons.phone_android,
+                      color: Colors.grey,
+                      size: 30,
+                    ),
+                  ),
                 ),
-              )],
+              ),
+            ],
           ),
           const SizedBox(height: 16),
           GestureDetector(
-            onTap: (){
+            onTap: () {
               Navigator.pop(context);
-              Navigator.pushNamed(context, '/signUpPage');
+              Navigator.pushNamed(context, AppRoutes.signUp);
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -262,30 +287,36 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 Text(
                   AppLocalizations.of(context)!.signUp,
                   style: TextStyle(
-                      color: myColor,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500),),
+                    color: myColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ],
             ),
           ),
           const SizedBox(height: 16),
           GestureDetector(
-            onTap: (){
-              Navigator.pushNamed(context, '/loginPage');
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.login);
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildGreyText(AppLocalizations.of(context)!.alreadyHaveAccount),
+                _buildGreyText(
+                  AppLocalizations.of(context)!.alreadyHaveAccount,
+                ),
                 Text(
-                    AppLocalizations.of(context)!.login,
-                    style: TextStyle(
-                        color: myColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500)),
+                  AppLocalizations.of(context)!.login,
+                  style: TextStyle(
+                    color: myColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
@@ -309,4 +340,3 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   //   }
   // }
 }
-
