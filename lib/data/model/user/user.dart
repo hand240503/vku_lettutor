@@ -39,21 +39,7 @@ class User {
     );
   }
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      id: json['id'],
-      email: json['email'],
-      firstName: json['firstName'],
-      lastName: json['lastName'],
-      phone: json['phone'],
-      roles: json['roles'] != null ? List<String>.from(json['roles']) : null,
-      languages: json['languages'],
-      birthday: json['birthday'],
-      isActive: json['isActive'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toFirestore() {
     return {
       'id': id,
       'email': email,
