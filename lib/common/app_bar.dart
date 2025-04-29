@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lettutor/providers/setting_provider.dart';
 import 'package:provider/provider.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar({super.key});
+  final bool showMenu; // Thêm biến showMenu
+
+  const CustomAppBar({super.key, this.showMenu = true}); // Mặc định là true
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +17,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     bool isLocaleVietnamese = settingsProvider.locale == const Locale("vi");
 
     return AppBar(
-      automaticallyImplyLeading: false,
+      automaticallyImplyLeading: false, // Không dùng nút back tự động
       backgroundColor: Colors.white,
       title: SvgPicture.asset(
         'lib/assets/images/lettutor_logo.svg',
@@ -25,11 +27,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         MaterialButton(
           onPressed: () {
-            // set locale
             if (settingsProvider.locale == const Locale("vi")) {
               settingsProvider.setLocale(const Locale("en"));
-            } else if (settingsProvider.locale == const Locale("en")) {
-              settingsProvider.setLocale(const Locale("vi"));
             } else {
               settingsProvider.setLocale(const Locale("vi"));
             }
@@ -54,13 +53,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
           ),
         ),
-        Container(
-          child: IconButton(
-            icon: const Icon(Icons.menu, color: Colors.grey),
-            onPressed: () {
-              Scaffold.of(context).openEndDrawer();
-            },
+        IconButton(
+          icon: Icon(
+            showMenu ? Icons.menu : Icons.arrow_back,
+            color: Colors.grey,
           ),
+          onPressed: () {
+            if (showMenu) {
+              Scaffold.of(context).openEndDrawer();
+            } else {
+              Navigator.of(context).pop();
+            }
+          },
         ),
       ],
     );

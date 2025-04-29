@@ -156,7 +156,7 @@ class _ListTeacherPageState extends State<ListTeacherPage> {
           child: Column(
             children: [
               BannerComponent(myColor: myColor),
-              FilterComponent(onSearch: onSearch), // Gửi tham số tìm kiếm
+              FilterComponent(onSearch: onSearch),
               Container(
                 padding: const EdgeInsets.only(top: 12, left: 16, right: 16),
                 child: const Divider(

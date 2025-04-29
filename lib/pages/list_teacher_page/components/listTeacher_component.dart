@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/l10n/app_localizations.dart';
+import 'package:lettutor/pages/detailTeacherPage/detail-a-teacher_page.dart';
 import 'package:lettutor/pages/list_teacher_page/components/tutorTeacherCard.dart';
 import 'package:lettutor/providers/tutor_provider.dart';
 import 'package:provider/provider.dart';
@@ -47,17 +48,18 @@ class _ListTeacherComponentState extends State<ListTeacherComponent> {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => DetailATeacherPage(),
-                  //     settings:
-                  //         RouteSettings(arguments: {
-                  //           'tutor': tutorProvider.tutors[index],
-                  //           'index': index,
-                  //         },),
-                  //   ),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailATeacherPage(),
+                      settings: RouteSettings(
+                        arguments: {
+                          'tutor': tutorProvider.tutors[index],
+                          'index': index,
+                        },
+                      ),
+                    ),
+                  );
                 },
                 child: TutorTeacherCard(
                   tutor: tutorProvider.tutors[index],

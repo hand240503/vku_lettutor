@@ -1252,6 +1252,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Send reset link'**
   String get resetLink;
+
+  /// No description provided for @resetFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Filters'**
+  String get resetFilter;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

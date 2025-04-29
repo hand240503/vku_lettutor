@@ -32,8 +32,8 @@ class _TutorTeacherCardState extends State<TutorTeacherCard> {
   @override
   Widget build(BuildContext context) {
     TutorProvider tutorProvider = context.watch<TutorProvider>();
-
     return Card(
+      color: Colors.white,
       elevation: 4,
       shape: RoundedRectangleBorder(
         side: BorderSide(color: Colors.grey.shade100, width: 1.0),
@@ -110,18 +110,63 @@ class _TutorTeacherCardState extends State<TutorTeacherCard> {
             SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                for (int i = 0; i < 5; i++)
-                  Icon(
-                    i < (widget.tutor.rating == null ? 0 : widget.tutor.rating!)
-                        ? Icons.star
-                        : Icons.star_border,
-                    color: Colors.yellow,
-                    size: 16,
-                  ),
+              children: [
+                for (int i = 0; i < (widget.tutor.rating ?? 0).floor(); i++)
+                  Icon(Icons.star, color: Colors.yellow, size: 16),
+
+                if (((widget.tutor.rating ?? 0) -
+                        (widget.tutor.rating ?? 0).floor()) >=
+                    0.5)
+                  Icon(Icons.star_half, color: Colors.yellow, size: 16),
               ],
             ),
             SizedBox(height: 10),
+
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Wrap(
+                spacing: 8.0,
+                children:
+                    convertStringToSpecialties(
+                      widget.tutor.speciality ?? "",
+                    )!.map((label) {
+                      return FilterChip(
+                        backgroundColor: Colors.lightBlue.shade100,
+                        label: Text(
+                          label,
+                          style: const TextStyle(
+                            color: Colors.blueAccent,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                        onSelected: (bool selected) {
+                          // Handle filter selection (if needed)
+                        },
+                        selected: false,
+                        side: BorderSide.none,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      );
+                    }).toList(),
+              ),
+            ),
+            SizedBox(height: 10),
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                widget.tutor.bio ?? "",
+                textAlign: TextAlign.justify,
+                maxLines: 4,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: Colors.grey,
+                  fontWeight: FontWeight.normal,
+                  fontSize: 12,
+                  height: 1.3,
+                ),
+              ),
+            ),
             SizedBox(height: 32),
             ElevatedButton(
               onPressed: () {
@@ -187,4 +232,10 @@ class _TutorTeacherCardState extends State<TutorTeacherCard> {
 
   //   return result;
   // }
+
+  List<String>? convertStringToSpecialties(String? inputString) {
+    List<String>? labels = inputString?.split(',');
+
+    return labels;
+  }
 }
