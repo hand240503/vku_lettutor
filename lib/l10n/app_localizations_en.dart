@@ -586,4 +586,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get resetLink => 'Send reset link';
+
+  @override
+  String get resetFilter => 'Reset Filters';
 }

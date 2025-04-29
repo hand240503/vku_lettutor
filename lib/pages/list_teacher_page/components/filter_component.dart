@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lettutor/common/dateSelection.dart';
-import 'package:lettutor/common/timeRange.dart';
 import 'package:lettutor/l10n/app_localizations.dart';
 import 'package:multiselect/multiselect.dart';
 import 'package:provider/provider.dart';
@@ -19,11 +17,7 @@ class FakeTutorProvider extends ChangeNotifier {
     List<String> specialities,
     Map<String, bool> nationality,
   ) {
-    print("Search parameters:");
-    print("Name: $name");
-    print("Specialities: $specialities");
-    print("Nationalities: $nationality");
-    // Just notify listeners to simulate a change
+
     notifyListeners();
   }
 }
@@ -141,80 +135,85 @@ class _FilterComponentState extends State<FilterComponent> {
                     ],
                   ),
                 ),
+                // Container(
+                //   alignment: Alignment.centerLeft,
+                //   child: Text(
+                //     AppLocalizations.of(context)!.selectAvailableTime,
+                //     style: TextStyle(
+                //       fontSize: 16,
+                //       fontWeight: FontWeight.bold,
+                //       color: Colors.black,
+                //     ),
+                //   ),
+                // ),
+                // Container(
+                //   alignment: Alignment.centerLeft,
+                //   padding: const EdgeInsets.only(top: 16, bottom: 16),
+                //   child: Column(
+                //     children: [
+                //       SizedBox(
+                //         width: double.infinity,
+                //         child: DateSelectionWidget(),
+                //       ),
+                //       SizedBox(height: 12),
+                //       SizedBox(
+                //         width: double.infinity,
+                //         child: TimeRangeSelector(),
+                //       ),
+                //     ],
+                //   ),
+                // ),
                 Container(
                   alignment: Alignment.centerLeft,
-                  child: Text(
-                    AppLocalizations.of(context)!.selectAvailableTime,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.only(top: 16, bottom: 16),
                   child: Column(
                     children: [
-                      SizedBox(
-                        width: double.infinity,
-                        child: DateSelectionWidget(),
+                      Wrap(
+                        spacing: 8.0,
+                        children:
+                            specialities.map((option) {
+                              final isSelected = selectedSpeciality == option;
+                              return FilterChip(
+                                backgroundColor: Colors.grey.shade100,
+                                side: BorderSide.none,
+                                label: Text(
+                                  option,
+                                  style: TextStyle(
+                                    color:
+                                        isSelected
+                                            ? Colors.white
+                                            : Colors.black,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                                selected: isSelected,
+                                onSelected: (isSelected) {
+                                  setState(() {
+                                    if (isSelected) {
+                                      selectedSpeciality = option;
+                                      widget.onSearch(
+                                        tutorNameController.text,
+                                        convertSpeciality(selectedSpeciality),
+                                        convertNation(selectedNationalities),
+                                      );
+                                    } else {
+                                      selectedSpeciality = 'All';
+                                      widget.onSearch(
+                                        tutorNameController.text,
+                                        [],
+                                        convertNation(selectedNationalities),
+                                      );
+                                    }
+                                  });
+                                },
+                                selectedColor: Colors.blue.shade500,
+                                checkmarkColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  side: BorderSide.none,
+                                ),
+                              );
+                            }).toList(),
                       ),
-                      SizedBox(height: 12),
-                      SizedBox(
-                        width: double.infinity,
-                        child: TimeRangeSelector(),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: Column(
-                    children: [
-                      // Wrap(
-                      //   spacing: 8.0,
-                      //   children:
-                      //       specialities.map((option) {
-                      //         final isSelected = selectedSpeciality == option;
-                      //         return FilterChip(
-                      //           backgroundColor: Colors.grey.shade300,
-                      //           label: Text(
-                      //             option,
-                      //             style: TextStyle(
-                      //               color:
-                      //                   isSelected
-                      //                       ? Colors.white
-                      //                       : Colors.black,
-                      //               fontWeight: FontWeight.normal,
-                      //             ),
-                      //           ),
-                      //           selected: isSelected,
-                      //           onSelected: (isSelected) {
-                      //             setState(() {
-                      //               if (isSelected) {
-                      //                 selectedSpeciality = option;
-                      //                 widget.onSearch(
-                      //                   tutorNameController.text,
-                      //                   convertSpeciality(selectedSpeciality),
-                      //                   convertNation(selectedNationalities),
-                      //                 );
-                      //               } else {
-                      //                 selectedSpeciality = 'All';
-                      //                 widget.onSearch(
-                      //                   tutorNameController.text,
-                      //                   [],
-                      //                   convertNation(selectedNationalities),
-                      //                 );
-                      //               }
-                      //             });
-                      //           },
-                      //           selectedColor: Colors.blue.shade500,
-                      //           checkmarkColor: Colors.white,
-                      //         );
-                      //       }).toList(),
-                      // ),
                     ],
                   ),
                 ),
@@ -242,8 +241,8 @@ class _FilterComponentState extends State<FilterComponent> {
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                     ),
-                    child: const Text(
-                      'Reset Filters',
+                    child: Text(
+                      AppLocalizations.of(context)!.resetFilter,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.normal,

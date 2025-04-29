@@ -586,4 +586,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get resetLink => 'Gửi liên kết đặt lại';
+
+  @override
+  String get resetFilter => 'Đặt lại bộ tìm kiếm';
 }

@@ -204,5 +204,6 @@
   "eWalletNotAvailable": "E-wallet is not supported in this version, please access to our website for more info",
   "resetPassword": "Reset Password",
   "forgotPasswordTitle": "Please enter your email address to search for your account.",
-  "resetLink": "Send reset link"
+  "resetLink": "Send reset link",
+  "resetFilter": "Reset Filters"
 }
