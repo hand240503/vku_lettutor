@@ -205,5 +205,8 @@
   "resetPassword": "Đặt lại mật khẩu",
   "forgotPasswordTitle": "Vui lòng nhập địa chỉ email của bạn để tìm tài khoản của bạn.",
   "resetLink": "Gửi liên kết đặt lại",
-  "resetFilter": "Đặt lại bộ tìm kiếm"
+  "resetFilter": "Đặt lại bộ tìm kiếm",
+  "selectLevel": "Chọn cấp độ",
+  "selectCategory": "Chọn danh mục",
+  "sortByLevel": "Sắp xếp theo cấp độ"
 }

@@ -205,5 +205,8 @@
   "resetPassword": "Reset Password",
   "forgotPasswordTitle": "Please enter your email address to search for your account.",
   "resetLink": "Send reset link",
-  "resetFilter": "Reset Filters"
+  "resetFilter": "Reset Filters",
+  "selectLevel": "Select level",
+  "selectCategory": "Select category",
+  "sortByLevel": "Sort by level"
 }

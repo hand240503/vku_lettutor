@@ -35,7 +35,7 @@ class ConstValue {
     "Starters",
     "Movers",
     "Flyers",
-    "KET/PET",
+    "PET",
     "TOEIC",
     "IELTS",
     "TOEFL"
@@ -59,6 +59,3 @@ class Specialities {
     LearnTopic(id:5, key: "conversational-english", name: "Conversational English"),
   ];
 }
-
-
-
