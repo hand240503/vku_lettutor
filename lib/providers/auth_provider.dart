@@ -1,100 +1,135 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../data/model/user/user.dart';
-import '../data/model/user/user_data.dart';
 import '../data/repository/user/auth_repository.dart';
 
 class AuthProvider extends ChangeNotifier {
-  late AuthRepository authRepository;
+  final AuthRepository _authRepository = AuthRepository();
 
   User? currentUser;
-  Tokens? token;
   bool refreshHome = false;
-  final firebase_auth.FirebaseAuth _firebaseAuth = firebase_auth.FirebaseAuth.instance;
 
   AuthProvider() {
-    authRepository = AuthRepository();
-    _initFirebaseAuth();
+    _getUserFromPreferences();
   }
 
-  Future<void> _initFirebaseAuth() async {
-    // Listen to auth state changes
-    _firebaseAuth.authStateChanges().listen((firebase_auth.User? firebaseUser) {
-      if (firebaseUser == null) {
-        clearUserInfo();
-      } else {
-        // You might want to fetch additional user data from your backend here
-        // and update currentUser accordingly
-      }
-    });
-  }
-
+  // Đăng nhập bằng email và mật khẩu
   Future<bool> signInWithEmailAndPassword(String email, String password) async {
     try {
-      final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
-        email: email,
-        password: password
+      final user = await _authRepository.loginWithEmailPassword(
+        email,
+        password,
       );
-
-      if (userCredential.user != null) {
-        // Fetch user data from your backend using Firebase UID
-        final userData = await authRepository.getUserDataByFirebaseId(userCredential.user!.uid);
-        if (userData.user != null) {
-          saveLoginInfo(userData.user!, userData.tokens);
-          return true;
-        }
-        return false;
+      if (user != null) {
+        saveLoginInfo(user);
         return true;
       }
-      return false;
     } catch (e) {
-      print('Firebase signin error: $e');
-      return false;
+      print('Sign-in error: $e');
     }
+    return false;
   }
 
-  Future<bool> createUserWithEmailAndPassword(String email, String password, Map<String, dynamic> additionalData) async {
+  // Đăng ký người dùng mới
+  Future<bool> createUserWithEmailAndPassword(
+    String email,
+    String password,
+    Map<String, dynamic> additionalData,
+  ) async {
     try {
-      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+      final user = await _authRepository.registerWithEmailPassword(
         email: email,
-        password: password
+        password: password,
+        additionalData: additionalData,
       );
-
-      if (userCredential.user != null) {
-        // Register the user in your backend with Firebase UID
-        final userData = await authRepository.registerUser(
-          userCredential.user!.uid,
-          email,
-          additionalData
-        );
-        if (userData.user != null) {
-          saveLoginInfo(userData.user!, userData.tokens);
-          return true;
-        }
-        return false;
+      if (user != null) {
+        saveLoginInfo(user);
         return true;
       }
-      return false;
     } catch (e) {
-      print('Firebase signup error: $e');
-      return false;
+      print('Registration error: $e');
     }
+    return false;
   }
 
+  // Đăng xuất người dùng
   Future<void> signOut() async {
-    await _firebaseAuth.signOut();
+    await _authRepository.logout();
     clearUserInfo();
   }
 
-  void saveLoginInfo(User currentUser, Tokens? token) {
-    this.token = token;
+  // Gửi email yêu cầu đặt lại mật khẩu
+  Future<bool> sendPasswordResetEmail(String email) async {
+    return await _authRepository.forgotPassword(email);
+  }
+
+  // Đổi mật khẩu
+  Future<bool> changePassword(
+    String currentPassword,
+    String newPassword,
+  ) async {
+    return await _authRepository.changePassword(
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+    );
+  }
+
+  // Lưu thông tin người dùng vào `currentUser`
+  void saveLoginInfo(User currentUser) {
     this.currentUser = currentUser;
+    _saveUserToPreferences(currentUser);
     notifyListeners();
   }
 
-  void clearUserInfo() {
-    token = null;
+  // Xóa thông tin người dùng khi đăng xuất
+  void clearUserInfo() async {
+    await firebase_auth.FirebaseAuth.instance.signOut();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('user_data');
     currentUser = null;
     notifyListeners();
+  }
+
+  // Lưu thông tin người dùng vào SharedPreferences
+  Future<void> _saveUserToPreferences(User user) async {
+    final prefs = await SharedPreferences.getInstance();
+    final userData = jsonEncode({
+      'id': user.id,
+      'email': user.email,
+      'firstName': user.firstName,
+      'lastName': user.lastName,
+      'phone': user.phone,
+      'roles': user.roles,
+      'languages': user.languages,
+      'birthday': user.birthday,
+      'isActive': user.isActive,
+    });
+    await prefs.setString('user_data', userData);
+  }
+
+  // Lấy thông tin người dùng từ SharedPreferences
+  Future<void> _getUserFromPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userString = prefs.getString('user_data');
+    if (userString != null) {
+      final jsonMap = jsonDecode(userString);
+      final user = User(
+        id: jsonMap['id'],
+        email: jsonMap['email'],
+        firstName: jsonMap['firstName'],
+        lastName: jsonMap['lastName'],
+        phone: jsonMap['phone'],
+        roles: List<String>.from(jsonMap['roles']),
+        languages: jsonMap['languages'],
+        birthday: jsonMap['birthday'],
+        isActive: jsonMap['isActive'],
+      );
+
+      saveLoginInfo(user);
+    }
   }
 }

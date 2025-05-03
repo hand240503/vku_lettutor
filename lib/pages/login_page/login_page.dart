@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lettutor/l10n/app_localizations.dart';
+import 'package:lettutor/providers/auth_provider.dart';
 import 'package:lettutor/providers/setting_provider.dart';
 import 'package:lettutor/router/app_routes.dart';
 import 'package:lettutor/utilities/validator.dart';
@@ -24,6 +25,19 @@ class _LoginPageState extends State<LoginPage> {
 
   bool loading = true;
   bool _isLocaleVietnamese = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // _checkUserLoginStatus();
+  }
+
+  // void _checkUserLoginStatus() async {
+  //   final authProvider = Provider.of<AuthProvider>(context, listen: false);
+  //   if (authProvider.currentUser != null) {
+  //     Navigator.pushReplacementNamed(context, AppRoutes.listTeacher);
+  //   }
+  // }
 
   void _toggleLanguage() {
     final settingsProvider = Provider.of<SettingsProvider>(
@@ -121,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buidForm() {
     return Form(
       key: _formKey,
-      autovalidateMode: AutovalidateMode.always,
+      autovalidateMode: AutovalidateMode.onUnfocus,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -227,7 +241,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       onPressed: () {
                         setState(() {
-                          isObscured = !isObscured; // Đảo trạng thái
+                          isObscured = !isObscured;
                         });
                       },
                     )
@@ -241,7 +255,13 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildLoginButton() {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () async {
+        print("Login button pressed");
+        if (_formKey.currentState?.validate() ?? false) {
+          var authProvider = Provider.of<AuthProvider>(context, listen: false);
+          handleLoginByAccount(authProvider);
+        }
+      },
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         backgroundColor: const Color.fromRGBO(4, 104, 211, 1.0),
@@ -256,6 +276,36 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  void handleLoginByAccount(AuthProvider authProvider) async {
+    try {
+      String email = emailController.text;
+      String password = passwordController.text;
+
+      bool result = await authProvider.signInWithEmailAndPassword(
+        email,
+        password,
+      );
+
+      if (result) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Login successful")));
+        Navigator.pushReplacementNamed(context, AppRoutes.listTeacher);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Login failed. Please check your credentials."),
+          ),
+        );
+      }
+    } catch (e) {
+      print("Error during login: $e");
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("An error occurred: $e")));
+    }
   }
 
   Widget _buildOtherLogin() {

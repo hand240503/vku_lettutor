@@ -159,7 +159,7 @@ class _CoursesPageState extends State<CoursesPage> with TickerProviderStateMixin
               )
                   : ListCoursesComponent(tabIndex: _tabController.index),
               if (coursesProvider.courses.isNotEmpty)
-                Container( 
+                Container(
                   alignment: Alignment.center,
                   padding: const EdgeInsets.all(16),
                   child: NumberPaginator(

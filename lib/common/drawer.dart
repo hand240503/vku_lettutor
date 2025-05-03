@@ -4,19 +4,17 @@ import 'package:lettutor/common/loading_overlay.dart';
 import 'package:lettutor/l10n/app_localizations.dart';
 import 'package:lettutor/pages/login_page/login_page.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../providers/auth_provider.dart';
-
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // var userProvider = Provider.of<UserProvider>(context, listen: false);
     return Drawer(
       child: ListView(
-        // Important: Remove any padding from the ListView.
         children: [
           ListTile(
             title: Container(
@@ -26,6 +24,9 @@ class CustomDrawer extends StatelessWidget {
                   AuthProvider authProvider,
                   Widget? child,
                 ) {
+                  final user =
+                      authProvider
+                          .currentUser; // Lấy thông tin người dùng từ AuthProvider
                   return Row(
                     children: [
                       Container(
@@ -38,8 +39,7 @@ class CustomDrawer extends StatelessWidget {
                             width: double.maxFinite,
                             fit: BoxFit.fitHeight,
                             imageUrl:
-
-                                "https://sandbox.api.lettutor.com/avatar/f569c202-7bbf-4620-af77-ecc1419a6b28avatar1700296337596.jpg",
+                                "https://randomuser.me/api/portraits/men/75.jpg", // Sử dụng URL avatar từ user
                             progressIndicatorBuilder:
                                 (context, url, downloadProgress) => Center(
                                   child: CircularProgressIndicator(
@@ -48,14 +48,15 @@ class CustomDrawer extends StatelessWidget {
                                 ),
                             errorWidget:
                                 (context, url, error) => Image.network(
-                                  "https://sandbox.api.lettutor.com/avatar/f569c202-7bbf-4620-af77-ecc1419a6b28avatar1700296337596.jpg",
+                                  "https://sandbox.api.lettutor.com/avatar/default-avatar.jpg", // Hình ảnh mặc định nếu có lỗi
                                 ),
                           ),
                         ),
                       ),
                       const SizedBox(width: 12),
                       Text(
-                        "Anonymous",
+                        user!
+                            .lastName!, // Hiển thị tên người dùng, nếu không có thì hiển thị "Anonymous"
                         style: TextStyle(
                           color: Colors.black87,
                           fontSize: 14,
@@ -68,8 +69,6 @@ class CustomDrawer extends StatelessWidget {
               ),
             ),
             onTap: () {
-              // Update the state of the app
-              // Then close the drawer
               Navigator.pop(context);
               Navigator.pushNamed(context, '/profilePage');
             },
@@ -92,8 +91,6 @@ class CustomDrawer extends StatelessWidget {
               ),
             ),
             onTap: () {
-              // Update the state of the app
-              // Then close the drawer
               Navigator.pop(context);
               Navigator.pushNamed(context, "/coursesPage");
             },
@@ -116,8 +113,6 @@ class CustomDrawer extends StatelessWidget {
               ),
             ),
             onTap: () {
-              // Update the state of the app
-              // Then close the drawer
               Navigator.pushNamed(context, "/becomeATeacherPage");
             },
           ),
@@ -139,8 +134,6 @@ class CustomDrawer extends StatelessWidget {
               ),
             ),
             onTap: () {
-              // Update the state of the app
-              // Then close the drawer
               var authProvider = Provider.of<AuthProvider>(
                 context,
                 listen: false,
@@ -187,7 +180,13 @@ class CustomDrawer extends StatelessWidget {
   }
 
   Future<void> logOut(AuthProvider authProvider) async {
-    // final prefs = await SharedPreferences.getInstance();
-    // prefs.clear();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.clear();
+      authProvider.clearUserInfo();
+    } catch (e) {
+      // Xử lý lỗi nếu có
+      print('Lỗi khi đăng xuất: $e');
+    }
   }
 }
