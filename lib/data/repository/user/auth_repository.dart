@@ -1,119 +1,160 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-          import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
-          import '../../model/user/user.dart';
-          import '../../model/user/user_data.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:shared_preferences/shared_preferences.dart';
 
-          class AuthRepository {
-            final firebase_auth.FirebaseAuth _firebaseAuth = firebase_auth.FirebaseAuth.instance;
-            final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+import '../../model/user/user.dart';
 
-            Future<UserData> getUserDataByFirebaseId(String firebaseUid) async {
-              // Get the user document from Firestore
-              final userDoc = await _firestore.collection('users').doc(firebaseUid).get();
+class AuthRepository {
+  final firebase_auth.FirebaseAuth _firebaseAuth =
+      firebase_auth.FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-              if (userDoc.exists) {
-                final userData = userDoc.data() as Map<String, dynamic>;
+  /// Đăng nhập bằng email và mật khẩu
+  Future<User> loginWithEmailPassword(String email, String password) async {
+    try {
+      // Đăng nhập với email và mật khẩu
+      final credential = await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-                // Create the User object from the document data
-                final user = User(
-                  id: userDoc.id,
-                  email: userData['email'],
-                  firstName: userData['firstName'] ?? '',
-                  lastName: userData['lastName'] ?? '',
-                  phone: userData['phone'],
-                  roles: userData['roles'] != null ? List<String>.from(userData['roles']) : [],
-                  languages: userData['languages'],
-                  birthday: userData['birthday'],
-                  isActive: userData['isActive'] ?? true,
-                );
+      // Lấy UID của người dùng
+      final firebaseUid = credential.user?.uid;
+      if (firebaseUid == null) throw Exception('User ID not found');
 
-                // Return user with tokens
-                return UserData(
-                  user: user,
-                  tokens: Tokens(
-                    access: TokenInfo(
-                      token: userData['accessToken'] ?? '',
-                      expires: userData['accessTokenExpires'] ?? '',
-                    ),
-                    refresh: TokenInfo(
-                      token: userData['refreshToken'] ?? '',
-                      expires: userData['refreshTokenExpires'] ?? '',
-                    ),
-                  ),
-                );
-              } else {
-                throw Exception('User not found');
-              }
-            }
+      // Lấy thông tin người dùng từ Firestore
+      final user = await getUserDataByFirebaseId(firebaseUid);
 
-            Future<UserData> registerUser(String firebaseUid, String email, Map<String, dynamic> additionalData) async {
-              // Create user document in Firestore
-              await _firestore.collection('users').doc(firebaseUid).set({
-                'email': email,
-                'createdAt': FieldValue.serverTimestamp(),
-                ...additionalData,
-              });
+      // Lưu thông tin người dùng vào SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      final userJson = jsonEncode({
+        'id': user.id,
+        'email': user.email,
+        'firstName': user.firstName,
+        'lastName': user.lastName,
+        'phone': user.phone,
+        'roles': user.roles,
+        'languages': user.languages,
+        'birthday': user.birthday,
+        'isActive': user.isActive,
+      });
+      await prefs.setString('user_data', userJson);
 
-              // Get the token
-              final currentUser = _firebaseAuth.currentUser;
-              final token = await currentUser?.getIdToken() ?? '';
+      // Trả về thông tin người dùng
+      return user;
+    } catch (e) {
+      print('Login failed: $e');
+      rethrow;
+    }
+  }
 
-              // Create user object
-              final user = User(
-                id: firebaseUid,
-                email: email,
-                firstName: additionalData['firstName'] ?? '',
-                lastName: additionalData['lastName'] ?? '',
-                phone: additionalData['phone'],
-                roles: additionalData['roles'] != null ? List<String>.from(additionalData['roles']) : [],
-                languages: additionalData['languages'],
-                birthday: additionalData['birthday'],
-                isActive: additionalData['isActive'] ?? true,
-              );
+  /// Lấy dữ liệu người dùng từ Firestore bằng Firebase UID
+  Future<User> getUserDataByFirebaseId(String firebaseUid) async {
+    // Lấy tài liệu người dùng từ Firestore theo UID
+    final userDoc = await _firestore.collection('users').doc(firebaseUid).get();
 
-              // Return user with tokens
-              return UserData(
-                user: user,
-                tokens: Tokens(
-                  access: TokenInfo(
-                    token: token,
-                    expires: '', // Add proper expiry time if available
-                  ),
-                  refresh: TokenInfo(
-                    token: '', // Firebase handles token refresh automatically
-                    expires: '',
-                  ),
-                ),
-              );
-            }
+    if (userDoc.exists) {
+      // Nếu tài liệu tồn tại, tạo đối tượng User từ dữ liệu
+      final userData = userDoc.data()!;
+      final user = User(
+        id: firebaseUid,
+        email: userData['email'],
+        firstName: userData['firstName'] ?? '',
+        lastName: userData['lastName'] ?? '',
+        phone: userData['phone'],
+        roles:
+            userData['roles'] != null
+                ? List<String>.from(userData['roles'])
+                : [],
+        languages: userData['languages'],
+        birthday: userData['birthday'],
+        isActive: userData['isActive'] ?? true,
+      );
 
-            Future<bool> forgotPassword(String email) async {
-              try {
-                await _firebaseAuth.sendPasswordResetEmail(email: email);
-                return true;
-              } catch (e) {
-                print('Failed to send password reset email: $e');
-                return false;
-              }
-            }
+      return user;
+    } else {
+      // Nếu tài liệu không tồn tại, ném lỗi
+      throw Exception('User not found in Firestore');
+    }
+  }
 
-            Future<bool> changePassword(String currentPassword, String newPassword) async {
-              try {
-                final user = _firebaseAuth.currentUser;
-                if (user == null) return false;
+  /// Đăng ký tài khoản mới
+  Future<User> registerWithEmailPassword({
+    required String email,
+    required String password,
+    required Map<String, dynamic> additionalData,
+  }) async {
+    try {
+      // Tạo tài khoản mới với email và mật khẩu
+      final credential = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-                // Re-authenticate the user before changing password
-                final credential = firebase_auth.EmailAuthProvider.credential(
-                  email: user.email!,
-                  password: currentPassword
-                );
+      // Lấy UID của người dùng
+      final firebaseUid = credential.user?.uid;
+      if (firebaseUid == null) throw Exception('User ID not found');
 
-                await user.reauthenticateWithCredential(credential);
-                await user.updatePassword(newPassword);
-                return true;
-              } catch (e) {
-                print('Failed to change password: $e');
-                return false;
-              }
-            }
-          }
+      // Lưu thông tin người dùng vào Firestore
+      await _firestore.collection('users').doc(firebaseUid).set({
+        'email': email,
+        'createdAt': FieldValue.serverTimestamp(),
+        ...additionalData,
+      });
+
+      // Lấy thông tin người dùng từ Firestore và trả về
+      return await getUserDataByFirebaseId(firebaseUid);
+    } catch (e) {
+      print('Registration failed: $e');
+      rethrow;
+    }
+  }
+
+  /// Gửi email đặt lại mật khẩu
+  Future<bool> forgotPassword(String email) async {
+    try {
+      // Gửi yêu cầu đặt lại mật khẩu qua email
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+      return true;
+    } catch (e) {
+      print('Failed to send password reset email: $e');
+      return false;
+    }
+  }
+
+  /// Thay đổi mật khẩu (yêu cầu xác thực lại)
+  Future<bool> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    try {
+      // Lấy người dùng hiện tại
+      final user = _firebaseAuth.currentUser;
+      if (user == null) return false;
+
+      // Tạo credential để xác thực lại người dùng
+      final credential = firebase_auth.EmailAuthProvider.credential(
+        email: user.email!,
+        password: currentPassword,
+      );
+
+      // Xác thực và thay đổi mật khẩu
+      await user.reauthenticateWithCredential(credential);
+      await user.updatePassword(newPassword);
+      return true;
+    } catch (e) {
+      print('Failed to change password: $e');
+      return false;
+    }
+  }
+
+  /// Đăng xuất người dùng
+  Future<void> logout() async {
+    await _firebaseAuth.signOut();
+  }
+
+  /// Lấy người dùng hiện tại
+  firebase_auth.User? get currentUser => _firebaseAuth.currentUser;
+}

@@ -26,7 +26,7 @@ class ConstValue {
     "INTERMEDIATE",
     "UPPER_INTERMEDIATE",
     "ADVANCED",
-    "PROFICIENCY"
+    "PROFICIENCY",
   ];
   static const specialityList = [
     "For kids",
@@ -38,7 +38,7 @@ class ConstValue {
     "PET",
     "TOEIC",
     "IELTS",
-    "TOEFL"
+    "TOEFL",
   ];
 }
 
@@ -54,8 +54,12 @@ class Specialities {
     TestPreparation(id: 8, key: "toeic", name: "TOEIC"),
   ];
   static List<LearnTopic> topics = [
-    LearnTopic(id:3, key: "english-for-kids", name: "English for Kids"),
-    LearnTopic(id:4, key: "business-english", name: "Business English"),
-    LearnTopic(id:5, key: "conversational-english", name: "Conversational English"),
+    LearnTopic(id: 3, key: "english-for-kids", name: "English for Kids"),
+    LearnTopic(id: 4, key: "business-english", name: "Business English"),
+    LearnTopic(
+      id: 5,
+      key: "conversational-english",
+      name: "Conversational English",
+    ),
   ];
 }

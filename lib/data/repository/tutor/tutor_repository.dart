@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lettutor/data/model/tutor/tutor.dart';
+import 'package:lettutor/data/model/user/learn_topic.dart';
 
 class TutorRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -93,6 +94,30 @@ class TutorRepository {
       onSuccess(totalPages);
     } catch (e) {
       onFail("Error counting tutors: $e");
+    }
+  }
+
+  Future<void> getCategories({
+    required Function(List<LearnTopic>) onSuccess,
+    required Function(String error) onFail,
+  }) async {
+    try {
+      final QuerySnapshot snapshot =
+          await _firestore.collection('categories').get();
+
+      List<LearnTopic> categories =
+          snapshot.docs.map((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            return LearnTopic(
+              id: doc.id.hashCode,
+              key: data['key'] as String?,
+              name: data['title'] as String?,
+            );
+          }).toList();
+
+      onSuccess(categories);
+    } catch (e) {
+      onFail("Error retrieving categories: $e");
     }
   }
 }

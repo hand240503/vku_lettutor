@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lettutor/data/model/tutor/tutor.dart';
+import 'package:lettutor/data/model/user/learn_topic.dart';
 import 'package:lettutor/data/repository/tutor/tutor_repository.dart';
 
 class TutorProvider with ChangeNotifier {
@@ -15,6 +16,9 @@ class TutorProvider with ChangeNotifier {
 
   int _totalPages = 0;
   int get totalPages => _totalPages;
+
+  List<LearnTopic> _categories = [];
+  List<LearnTopic> get categories => _categories;
 
   Future<void> fetchTutors({required int limit}) async {
     if (!_hasMoreData) return;
@@ -103,5 +107,25 @@ class TutorProvider with ChangeNotifier {
         notifyListeners();
       },
     );
+  }
+
+  Future<void> fetchCategories() async {
+    try {
+      await _tutorRepository.getCategories(
+        onSuccess: (List<LearnTopic> data) {
+          _categories = data;
+          notifyListeners();
+        },
+        onFail: (String error) {
+          _categories = [];
+          notifyListeners();
+          print("Lỗi khi lấy categories: $error");
+        },
+      );
+    } catch (e) {
+      _categories = [];
+      notifyListeners();
+      print("Exception khi lấy categories: $e");
+    }
   }
 }

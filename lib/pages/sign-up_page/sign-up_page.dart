@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lettutor/router/app_routes.dart';
@@ -92,16 +94,16 @@ class _SignUpPageState extends State<SignUpPage> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child:
-                    _isLocaleVietnamese
-                        ? SvgPicture.asset(
-                      'lib/assets/images/vietnam.svg',
-                      semanticsLabel: "My SVG",
-                      height: 22,
-                    )
-                        : SvgPicture.asset(
-                      'lib/assets/images/united-states.svg',
-                      height: 22,
-                    ),
+                        _isLocaleVietnamese
+                            ? SvgPicture.asset(
+                              'lib/assets/images/vietnam.svg',
+                              semanticsLabel: "My SVG",
+                              height: 22,
+                            )
+                            : SvgPicture.asset(
+                              'lib/assets/images/united-states.svg',
+                              height: 22,
+                            ),
                   ),
                 ),
               ),
@@ -121,7 +123,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _buildForm() {
     return Form(
       key: _formKey,
-      autovalidateMode: AutovalidateMode.always,
+      autovalidateMode: AutovalidateMode.onUnfocus,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -129,29 +131,48 @@ class _SignUpPageState extends State<SignUpPage> {
             AppLocalizations.of(context)!.title,
             textAlign: TextAlign.center,
             style: TextStyle(
-                color: myColor, fontSize: 32, fontWeight: FontWeight.w700),
+              color: myColor,
+              fontSize: 32,
+              fontWeight: FontWeight.w700,
+            ),
           ),
           const SizedBox(height: 16),
-           Text(
+          Text(
             AppLocalizations.of(context)!.descriptionTitle,
             textAlign: TextAlign.center,
             style: TextStyle(
-                color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+              color: Colors.black,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 16),
           _buildGreyText("EMAIL"),
           const SizedBox(height: 8),
-          _buildInputField(emailController, 'mail@example.com', validator: Validator.validateEmail),
+          _buildInputField(
+            emailController,
+            'mail@example.com',
+            validator: Validator.validateEmail,
+          ),
           const SizedBox(height: 16),
           _buildGreyText(AppLocalizations.of(context)!.password),
           const SizedBox(height: 8),
-          _buildInputField(passwordController, AppLocalizations.of(context)!.hintPassword,
-              isPassword: true, validator: Validator.validatePassword),
+          _buildInputField(
+            passwordController,
+            AppLocalizations.of(context)!.hintPassword,
+            isPassword: true,
+            validator: Validator.validatePassword,
+          ),
           const SizedBox(height: 16),
           _buildGreyText(AppLocalizations.of(context)!.confirmPassword),
           const SizedBox(height: 8),
-          _buildInputField(confirmPasswordController, AppLocalizations.of(context)!.confirmPassword,
-              isPassword: true, validator: Validator.validateConfirmPassword, isConfirmPassword: true),
+          _buildInputField(
+            confirmPasswordController,
+            AppLocalizations.of(context)!.confirmPassword,
+            isPassword: true,
+            validator: Validator.validateConfirmPassword,
+            isConfirmPassword: true,
+          ),
           const SizedBox(height: 12),
           GestureDetector(
             onTap: () {
@@ -172,62 +193,129 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget _buildGreyText(String text) {
-    return Text(
-      text,
-      style: const TextStyle(color: Colors.grey),
-    );
+    return Text(text, style: const TextStyle(color: Colors.grey));
   }
 
   Widget _buildPrimaryColorText(String text) {
-    return Text(text,
-        style: TextStyle(
-            color: myColor, fontSize: 16, fontWeight: FontWeight.w400));
+    return Text(
+      text,
+      style: TextStyle(
+        color: myColor,
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+      ),
+    );
   }
 
-  Widget _buildInputField(TextEditingController controller, String hintText,
-      {isPassword = false, Function? validator, isConfirmPassword}) {
-    return TextFormField(
-      controller: controller,
-      validator: (value) {
-        return isConfirmPassword ?? false ? validator!( passwordController.text, value) : validator!(value ?? "");
+  Widget _buildInputField(
+    TextEditingController controller,
+    String hintText, {
+    bool isPassword = false,
+    Function? validator,
+    bool isConfirmPassword = false,
+  }) {
+    bool isObscured =
+        isPassword; // Mặc định là ẩn mật khẩu nếu isPassword = true
+
+    return StatefulBuilder(
+      // Sử dụng StatefulBuilder để quản lý trạng thái isObscured
+      builder: (context, setState) {
+        return TextFormField(
+          controller: controller,
+          validator: (value) {
+            return isConfirmPassword
+                ? validator!(passwordController.text, value)
+                : validator!(value ?? "");
+          },
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8.0)),
+            ),
+            hintText: hintText,
+            hintStyle: TextStyle(color: Colors.grey.shade400),
+            isDense: true,
+            contentPadding: EdgeInsets.all(16),
+            suffixIcon:
+                isPassword
+                    ? IconButton(
+                      icon: Icon(
+                        isObscured ? Icons.visibility_off : Icons.visibility,
+                        color: Colors.grey,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          isObscured = !isObscured;
+                        });
+                      },
+                    )
+                    : null,
+          ),
+          obscureText: isObscured,
+        );
       },
-      decoration: InputDecoration(
-        border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8.0))),
-        hintText: hintText,
-        hintStyle: TextStyle(color: Colors.grey.shade400),
-        isDense: true, // Added this
-        contentPadding: EdgeInsets.all(16),
-        suffixIcon: isPassword ? Icon(Icons.remove_red_eye) : null,
-      ),
-      obscureText: isPassword,
     );
   }
 
   Widget _buildSignUpButton() {
     var authProvider = Provider.of<AuthProvider>(context, listen: false);
     return ElevatedButton(
-      onPressed: () {
-        if (_formKey.currentState!.validate()) {
-          //handleCreateAccount(authProvider);
-        }
-      },
+      onPressed: () => _handleSignUp(authProvider),
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(
           // border radius
-            borderRadius: BorderRadius.circular(8)),
+          borderRadius: BorderRadius.circular(8),
+        ),
         backgroundColor: const Color.fromRGBO(4, 104, 211, 1.0),
         minimumSize: const Size.fromHeight(52),
       ),
-      child:  Text(
+      child: Text(
         AppLocalizations.of(context)!.signUp.toUpperCase(),
         style: TextStyle(
-            fontSize: 20,
+          fontSize: 20,
           color: Colors.white,
           fontWeight: FontWeight.bold,
         ),
       ),
     );
+  }
+
+  String generateRandomLastName() {
+    final random = Random();
+    String randomNumbers =
+        List.generate(12, (_) => random.nextInt(10).toString()).join();
+
+    return 'user$randomNumbers';
+  }
+
+  void _handleSignUp(AuthProvider authProvider) {
+    if (_formKey.currentState!.validate()) {
+      final email = emailController.text.trim();
+      final password = passwordController.text;
+      Map<String, dynamic> additionalData = {
+        "firstName": "",
+        "lastName": generateRandomLastName(),
+        "birthday": "",
+        "isActive": true,
+        "languages": "",
+        "phone": "",
+        "roles": ["user"],
+      };
+
+      authProvider
+          .createUserWithEmailAndPassword(email, password, additionalData)
+          .then((success) {
+            if (success) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(AppLocalizations.of(context)!.signUp)),
+              );
+              Navigator.pushReplacementNamed(context, AppRoutes.login);
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(AppLocalizations.of(context)!.signUp)),
+              );
+            }
+          });
+    }
   }
 
   Widget _buildOtherLogin() {
@@ -239,47 +327,60 @@ class _SignUpPageState extends State<SignUpPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Tab(icon: SvgPicture.asset("lib/assets/images/facebook-logo.svg")),
+              Tab(
+                icon: SvgPicture.asset("lib/assets/images/facebook-logo.svg"),
+              ),
               Tab(icon: SvgPicture.asset("lib/assets/images/google-logo.svg")),
               Padding(
                 padding: const EdgeInsets.only(left: 6),
                 child: MaterialButton(
-                    onPressed: () {},
-                    textColor: Colors.white,
-                    minWidth: 32,
-                    padding: const EdgeInsets.all(8),
-                    shape: CircleBorder(
-                        side: BorderSide(
-                            width: 1, style: BorderStyle.solid, color: myColor)),
-                    child: ClipRRect(
-                        borderRadius:
-                        BorderRadius.circular(10), // Adjust the radius as needed
-                        child: const Icon(
-                          Icons.phone_android,
-                          color: Colors.grey,
-                          size: 30,
-                        )
-                    )
+                  onPressed: () {},
+                  textColor: Colors.white,
+                  minWidth: 32,
+                  padding: const EdgeInsets.all(8),
+                  shape: CircleBorder(
+                    side: BorderSide(
+                      width: 1,
+                      style: BorderStyle.solid,
+                      color: myColor,
+                    ),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(
+                      10,
+                    ), // Adjust the radius as needed
+                    child: const Icon(
+                      Icons.phone_android,
+                      color: Colors.grey,
+                      size: 30,
+                    ),
+                  ),
                 ),
-              )],
+              ),
+            ],
           ),
           const SizedBox(height: 16),
           GestureDetector(
-            onTap: (){
+            onTap: () {
               Navigator.pushNamed(context, AppRoutes.login);
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildGreyText(AppLocalizations.of(context)!.alreadyHaveAccount),
-                Text(AppLocalizations.of(context)!.login,
-                    style: TextStyle(
-                        color: myColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500)),
+                _buildGreyText(
+                  AppLocalizations.of(context)!.alreadyHaveAccount,
+                ),
+                Text(
+                  AppLocalizations.of(context)!.login,
+                  style: TextStyle(
+                    color: myColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );

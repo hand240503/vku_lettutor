@@ -31,7 +31,10 @@ class _ListTeacherPageState extends State<ListTeacherPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _fetchTutors());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchTutors();
+      _fetchCategories();
+    });
   }
 
   Future<void> _fetchTutors() async {
@@ -106,6 +109,32 @@ class _ListTeacherPageState extends State<ListTeacherPage> {
         });
   }
 
+  Future<void> _fetchCategories() async {
+    try {
+      setState(() {
+        _isLoadingPagination = true;
+      });
+
+      final tutorProvider = Provider.of<TutorProvider>(context, listen: false);
+      await tutorProvider.fetchCategories().whenComplete(() {
+        if (mounted) {
+          setState(() {
+            _isLoadingPagination = false;
+          });
+        }
+      });
+    } catch (error) {
+      print('Error fetching categories: $error');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoadingPagination = false;
+        });
+      }
+    }
+  }
+
+  // Hàm tìm kiếm
   // Hàm tìm kiếm
   void onSearch(
     String tutorName,
@@ -123,13 +152,14 @@ class _ListTeacherPageState extends State<ListTeacherPage> {
     _specialities = specialities;
     _nationalities = nationalities;
 
-    // Tìm kiếm với các bộ lọc
-    // await tutorProvider.fetchTutorsBySearch(
-    //   tutorName: _tutorName,
-    //   specialities: _specialities,
-    //   nationalities: _nationalities,
-    //   limit: _pageSize,
-    // );
+    // Tạo đối tượng tìm kiếm từ các tham số
+    final searchObject = createSearchObject(
+      tutorName,
+      specialities,
+      nationalities,
+    );
+
+    print(searchObject);
 
     if (mounted) {
       setState(() {
@@ -156,7 +186,13 @@ class _ListTeacherPageState extends State<ListTeacherPage> {
           child: Column(
             children: [
               BannerComponent(myColor: myColor),
-              FilterComponent(onSearch: onSearch),
+              // Truyền danh sách specialities vào FilterComponent
+              FilterComponent(
+                onSearch: onSearch,
+                specialities:
+                    tutorProvider
+                        .categories, // Lấy danh sách chuyên ngành từ TutorProvider
+              ),
               Container(
                 padding: const EdgeInsets.only(top: 12, left: 16, right: 16),
                 child: const Divider(
@@ -191,5 +227,27 @@ class _ListTeacherPageState extends State<ListTeacherPage> {
         ),
       ),
     );
+  }
+
+  Map<String, String> createSearchObject(
+    String tutorName,
+    List<String> specialities,
+    Map<String, bool> nationalities,
+  ) {
+    String nationality = '';
+    if (nationalities.isNotEmpty) {
+      nationality = nationalities.keys.join(', ');
+    }
+
+    String specialityKey =
+        specialities.isEmpty || specialities.contains('All')
+            ? ''
+            : specialities.join(', ');
+
+    return {
+      'name': tutorName.isEmpty ? '' : tutorName,
+      'country': nationality.isEmpty ? '' : nationality,
+      'speciality': specialityKey.isEmpty ? '' : specialityKey,
+    };
   }
 }
