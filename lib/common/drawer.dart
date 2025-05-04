@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 
 import '../providers/auth_provider.dart';
 
-
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
 
@@ -19,53 +18,50 @@ class CustomDrawer extends StatelessWidget {
         // Important: Remove any padding from the ListView.
         children: [
           ListTile(
-            title: Container(
-              child: Consumer<AuthProvider>(
-                builder: (
-                  BuildContext context,
-                  AuthProvider authProvider,
-                  Widget? child,
-                ) {
-                  return Row(
-                    children: [
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        width: 45,
-                        height: 45,
-                        decoration: const BoxDecoration(shape: BoxShape.circle),
-                        child: ClipOval(
-                          child: CachedNetworkImage(
-                            width: double.maxFinite,
-                            fit: BoxFit.fitHeight,
-                            imageUrl:
-
-                                "https://sandbox.api.lettutor.com/avatar/f569c202-7bbf-4620-af77-ecc1419a6b28avatar1700296337596.jpg",
-                            progressIndicatorBuilder:
-                                (context, url, downloadProgress) => Center(
-                                  child: CircularProgressIndicator(
-                                    value: downloadProgress.progress,
-                                  ),
+            title: Consumer<AuthProvider>(
+              builder: (
+                BuildContext context,
+                AuthProvider authProvider,
+                Widget? child,
+              ) {
+                return Row(
+                  children: [
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      width: 45,
+                      height: 45,
+                      decoration: const BoxDecoration(shape: BoxShape.circle),
+                      child: ClipOval(
+                        child: CachedNetworkImage(
+                          width: double.maxFinite,
+                          fit: BoxFit.fitHeight,
+                          imageUrl:
+                              "https://i.imgur.com/z07Pykq.jpeg",
+                          progressIndicatorBuilder:
+                              (context, url, downloadProgress) => Center(
+                                child: CircularProgressIndicator(
+                                  value: downloadProgress.progress,
                                 ),
-                            errorWidget:
-                                (context, url, error) => Image.network(
-                                  "https://sandbox.api.lettutor.com/avatar/f569c202-7bbf-4620-af77-ecc1419a6b28avatar1700296337596.jpg",
-                                ),
-                          ),
+                              ),
+                          errorWidget:
+                              (context, url, error) => Image.network(
+                                "https://i.imgur.com/z07Pykq.jpeg",
+                              ),
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      Text(
-                        "Anonymous",
-                        style: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      "Anonymous",
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ],
-                  );
-                },
-              ),
+                    ),
+                  ],
+                );
+              },
             ),
             onTap: () {
               // Update the state of the app
@@ -75,21 +71,19 @@ class CustomDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            title: Container(
-              child: Row(
-                children: [
-                  Icon(Icons.school, size: 36, color: Colors.blue),
-                  SizedBox(width: 12),
-                  Text(
-                    AppLocalizations.of(context)!.course,
-                    style: TextStyle(
-                      color: Colors.black87,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
+            title: Row(
+              children: [
+                Icon(Icons.school, size: 36, color: Colors.blue),
+                SizedBox(width: 12),
+                Text(
+                  AppLocalizations.of(context)!.course,
+                  style: TextStyle(
+                    color: Colors.black87,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             onTap: () {
               // Update the state of the app
@@ -99,21 +93,19 @@ class CustomDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            title: Container(
-              child: Row(
-                children: [
-                  Icon(Icons.people_alt, size: 36, color: Colors.blue),
-                  SizedBox(width: 12),
-                  Text(
-                    AppLocalizations.of(context)!.becomeATutor,
-                    style: TextStyle(
-                      color: Colors.black87,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
+            title: Row(
+              children: [
+                Icon(Icons.people_alt, size: 36, color: Colors.blue),
+                SizedBox(width: 12),
+                Text(
+                  AppLocalizations.of(context)!.becomeATutor,
+                  style: TextStyle(
+                    color: Colors.black87,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             onTap: () {
               // Update the state of the app
@@ -122,21 +114,19 @@ class CustomDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            title: Container(
-              child: Row(
-                children: [
-                  Icon(Icons.logout, size: 36, color: Colors.blue),
-                  SizedBox(width: 12),
-                  Text(
-                    AppLocalizations.of(context)!.logout,
-                    style: TextStyle(
-                      color: Colors.black87,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
+            title: Row(
+              children: [
+                Icon(Icons.logout, size: 36, color: Colors.blue),
+                SizedBox(width: 12),
+                Text(
+                  AppLocalizations.of(context)!.logout,
+                  style: TextStyle(
+                    color: Colors.black87,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             onTap: () {
               // Update the state of the app

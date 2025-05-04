@@ -1258,6 +1258,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reset Filters'**
   String get resetFilter;
+
+  /// No description provided for @selectLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Select level'**
+  String get selectLevel;
+
+  /// No description provided for @selectCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Select category'**
+  String get selectCategory;
+
+  /// No description provided for @sortByLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by level'**
+  String get sortByLevel;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -56,57 +56,69 @@ class _CourseCardState extends State<CourseCard> {
           ),
           color: Colors.grey.shade100,
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.all(0.0),
             child: Column(
               children: [
-                CachedNetworkImage(
-                  width: double.maxFinite,
-                  fit: BoxFit.fitHeight,
-                  imageUrl: widget.course.imageUrl ??
-                      "https://cdn.kona-blue.com/upload/kona-blue_com/post/images/2024/09/18/457/avatar-mac-dinh-7.jpg",
-                  progressIndicatorBuilder:
-                      (context, url, downloadProgress) => Center(
-                          child: CircularProgressIndicator(
-                              value: downloadProgress.progress)),
-                  errorWidget: (context, url, error) => Image.network(
-                      "https://cdn.kona-blue.com/upload/kona-blue_com/post/images/2024/09/18/457/avatar-mac-dinh-7.jpg"),
-                ),
-                Container(
-                  padding: EdgeInsets.only(top: 20, bottom: 20),
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "${widget.course.name}",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                ClipRRect(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10.0),
+                    topRight: Radius.circular(10.0),
+                  ),
+                  child: CachedNetworkImage(
+                    width: double.maxFinite,
+                    fit: BoxFit.fitHeight,
+                    imageUrl: widget.course.imageUrl ??
+                        "https://i.imgur.com/u0tysdt.png",
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) => Center(
+                            child: CircularProgressIndicator(
+                                value: downloadProgress.progress)),
+                    errorWidget: (context, url, error) => Image.network(
+                        "https://i.imgur.com/u0tysdt.png"),
                   ),
                 ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "${widget.course.description}",
-                    style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
-                        fontWeight: FontWeight.normal),
-                  ),
-                ),
-                SizedBox(
-                  height: 12,
-                ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "${ConstValue.levelList[int.parse(widget.course.level!) == 0 ? 0 : int.parse(widget.course.level!) - 1]}  •  ${widget.course.topics?.length ?? 0} Lessons",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-
+                Padding(
+                    padding: const EdgeInsets.only(top: 0, left: 24, right: 24, bottom: 24),
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.only(top: 20, bottom: 20),
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "${widget.course.name}",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "${widget.course.description}",
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14,
+                                fontWeight: FontWeight.normal),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "${ConstValue.levelList[int.parse(widget.course.level!) == 0 ? 0 : int.parse(widget.course.level!) - 1]}  •  ${widget.course.topics?.length ?? 0} Lessons",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
                 ),
               ],
             ),

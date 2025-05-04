@@ -589,4 +589,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get resetFilter => 'Reset Filters';
+
+  @override
+  String get selectLevel => 'Select level';
+
+  @override
+  String get selectCategory => 'Select category';
+
+  @override
+  String get sortByLevel => 'Sort by level';
 }
