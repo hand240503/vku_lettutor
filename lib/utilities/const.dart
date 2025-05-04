@@ -35,7 +35,7 @@ class ConstValue {
     "Starters",
     "Movers",
     "Flyers",
-    "KET/PET",
+    "PET",
     "TOEIC",
     "IELTS",
     "TOEFL",

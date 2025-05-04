@@ -292,7 +292,7 @@ class _LoginPageState extends State<LoginPage> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text("Login successful")));
-        Navigator.pushReplacementNamed(context, AppRoutes.listTeacher);
+        Navigator.pushReplacementNamed(context, AppRoutes.courses);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

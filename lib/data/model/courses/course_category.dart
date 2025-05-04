@@ -17,6 +17,12 @@ class CourseCategory {
     this.updatedAt,
   });
 
+
+  @override
+  String toString() {
+    return 'CourseCategory{id: $id, title: $title, description: $description, key: $key, createdAt: $createdAt, updatedAt: $updatedAt}';
+  }
+
   factory CourseCategory.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
@@ -30,6 +36,17 @@ class CourseCategory {
       key: data['key'],
       createdAt: createdTimestamp?.toDate().toIso8601String(),
       updatedAt: updatedTimestamp?.toDate().toIso8601String(),
+    );
+  }
+
+  factory CourseCategory.fromMap(Map<String, dynamic> data) {
+    return CourseCategory(
+      id: data['id'],
+      title: data['title'],
+      description: data['description'],
+      key: data['key'],
+      createdAt: data['createdAt'],
+      updatedAt: data['updatedAt'],
     );
   }
 

@@ -589,4 +589,13 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get resetFilter => 'Đặt lại bộ tìm kiếm';
+
+  @override
+  String get selectLevel => 'Chọn cấp độ';
+
+  @override
+  String get selectCategory => 'Chọn danh mục';
+
+  @override
+  String get sortByLevel => 'Sắp xếp theo cấp độ';
 }

@@ -17,56 +17,54 @@ class CustomDrawer extends StatelessWidget {
       child: ListView(
         children: [
           ListTile(
-            title: Container(
-              child: Consumer<AuthProvider>(
-                builder: (
-                  BuildContext context,
-                  AuthProvider authProvider,
-                  Widget? child,
-                ) {
-                  final user =
-                      authProvider
-                          .currentUser; // Lấy thông tin người dùng từ AuthProvider
-                  return Row(
-                    children: [
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        width: 45,
-                        height: 45,
-                        decoration: const BoxDecoration(shape: BoxShape.circle),
-                        child: ClipOval(
-                          child: CachedNetworkImage(
-                            width: double.maxFinite,
-                            fit: BoxFit.fitHeight,
-                            imageUrl:
-                                "https://randomuser.me/api/portraits/men/75.jpg", // Sử dụng URL avatar từ user
-                            progressIndicatorBuilder:
-                                (context, url, downloadProgress) => Center(
-                                  child: CircularProgressIndicator(
-                                    value: downloadProgress.progress,
-                                  ),
+            title: Consumer<AuthProvider>(
+              builder: (
+                BuildContext context,
+                AuthProvider authProvider,
+                Widget? child,
+              ) {
+                final user =
+                    authProvider
+                        .currentUser; // Lấy thông tin người dùng từ AuthProvider
+                return Row(
+                  children: [
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      width: 45,
+                      height: 45,
+                      decoration: const BoxDecoration(shape: BoxShape.circle),
+                      child: ClipOval(
+                        child: CachedNetworkImage(
+                          width: double.maxFinite,
+                          fit: BoxFit.fitHeight,
+                          imageUrl:
+                              "https://randomuser.me/api/portraits/men/75.jpg", // Sử dụng URL avatar từ user
+                          progressIndicatorBuilder:
+                              (context, url, downloadProgress) => Center(
+                                child: CircularProgressIndicator(
+                                  value: downloadProgress.progress,
                                 ),
-                            errorWidget:
-                                (context, url, error) => Image.network(
-                                  "https://sandbox.api.lettutor.com/avatar/default-avatar.jpg", // Hình ảnh mặc định nếu có lỗi
-                                ),
-                          ),
+                              ),
+                          errorWidget:
+                              (context, url, error) => Image.network(
+                                "https://sandbox.api.lettutor.com/avatar/default-avatar.jpg", // Hình ảnh mặc định nếu có lỗi
+                              ),
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      Text(
-                        user!
-                            .lastName!, // Hiển thị tên người dùng, nếu không có thì hiển thị "Anonymous"
-                        style: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      user?.lastName ??
+                          "Anonymous", // Hiển thị tên người dùng, nếu không có thì hiển thị "Anonymous"
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ],
-                  );
-                },
-              ),
+                    ),
+                  ],
+                );
+              },
             ),
             onTap: () {
               Navigator.pop(context);
@@ -74,21 +72,19 @@ class CustomDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            title: Container(
-              child: Row(
-                children: [
-                  Icon(Icons.school, size: 36, color: Colors.blue),
-                  SizedBox(width: 12),
-                  Text(
-                    AppLocalizations.of(context)!.course,
-                    style: TextStyle(
-                      color: Colors.black87,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
+            title: Row(
+              children: [
+                Icon(Icons.school, size: 36, color: Colors.blue),
+                SizedBox(width: 12),
+                Text(
+                  AppLocalizations.of(context)!.course,
+                  style: TextStyle(
+                    color: Colors.black87,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             onTap: () {
               Navigator.pop(context);
@@ -96,42 +92,38 @@ class CustomDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            title: Container(
-              child: Row(
-                children: [
-                  Icon(Icons.people_alt, size: 36, color: Colors.blue),
-                  SizedBox(width: 12),
-                  Text(
-                    AppLocalizations.of(context)!.becomeATutor,
-                    style: TextStyle(
-                      color: Colors.black87,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
+            title: Row(
+              children: [
+                Icon(Icons.people_alt, size: 36, color: Colors.blue),
+                SizedBox(width: 12),
+                Text(
+                  AppLocalizations.of(context)!.becomeATutor,
+                  style: TextStyle(
+                    color: Colors.black87,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             onTap: () {
               Navigator.pushNamed(context, "/becomeATeacherPage");
             },
           ),
           ListTile(
-            title: Container(
-              child: Row(
-                children: [
-                  Icon(Icons.logout, size: 36, color: Colors.blue),
-                  SizedBox(width: 12),
-                  Text(
-                    AppLocalizations.of(context)!.logout,
-                    style: TextStyle(
-                      color: Colors.black87,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
+            title: Row(
+              children: [
+                Icon(Icons.logout, size: 36, color: Colors.blue),
+                SizedBox(width: 12),
+                Text(
+                  AppLocalizations.of(context)!.logout,
+                  style: TextStyle(
+                    color: Colors.black87,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             onTap: () {
               var authProvider = Provider.of<AuthProvider>(

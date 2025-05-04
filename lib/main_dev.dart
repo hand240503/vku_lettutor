@@ -7,6 +7,7 @@ import 'package:lettutor/l10n/app_localizations.dart';
 import 'package:lettutor/pages/list_teacher_page/list_teacher_page.dart';
 import 'package:lettutor/pages/login_page/login_page.dart';
 import 'package:lettutor/providers/auth_provider.dart';
+import 'package:lettutor/providers/courses_provider.dart';
 import 'package:lettutor/providers/setting_provider.dart';
 import 'package:lettutor/providers/tutor_provider.dart';
 import 'package:lettutor/router/app_routes.dart';
@@ -20,9 +21,10 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => AuthProvider()),
-        ChangeNotifierProvider(create: (context) => TutorProvider()),
-        ChangeNotifierProvider(create: (context) => SettingsProvider()),
+        ChangeNotifierProvider(create: (_) => SettingsProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => TutorProvider()),
+        ChangeNotifierProvider(create: (_) => CoursesProvider()),
       ],
       child: const MyApp(),
     ),

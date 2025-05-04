@@ -42,6 +42,20 @@ class CourseTopic {
     );
   }
 
+  factory CourseTopic.fromMap(Map<String, dynamic> data) {
+    return CourseTopic(
+      id: data['id'],
+      courseId: data['courseId'],
+      orderCourse: data['orderCourse'],
+      name: data['name'],
+      nameFile: data['nameFile'],
+      description: data['description'],
+      videoUrl: data['videoUrl'],
+      createdAt: data['createdAt'],
+      updatedAt: data['updatedAt'],
+    );
+  }
+
   Map<String, dynamic> toFirestore() {
     return {
       'courseId': courseId,
