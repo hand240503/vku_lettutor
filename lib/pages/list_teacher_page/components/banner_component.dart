@@ -33,7 +33,7 @@ class _BannerComponentState extends State<BannerComponent> {
             ),
           ),
           SizedBox(height: 16),
-          (true)
+          (false)
               ? Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
