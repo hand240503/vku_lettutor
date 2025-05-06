@@ -1,17 +1,16 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:lettutor/common/bottom_nav_bar.dart';
 import 'package:lettutor/common/loading_overlay.dart';
 import 'package:lettutor/firebase_options.dart';
 import 'package:lettutor/l10n/app_localizations.dart';
-import 'package:lettutor/pages/courses_page/courses_page.dart';
-import 'package:lettutor/pages/detail_course_page/detail-course_page.dart';
-import 'package:lettutor/pages/list_teacher_page/list_teacher_page.dart';
 import 'package:lettutor/pages/login_page/login_page.dart';
 import 'package:lettutor/providers/auth_provider.dart';
 import 'package:lettutor/providers/courses_provider.dart';
 import 'package:lettutor/providers/setting_provider.dart';
 import 'package:lettutor/providers/tutor_provider.dart';
+import 'package:lettutor/providers/user_provider.dart';
 import 'package:lettutor/router/app_routes.dart';
 import 'package:lettutor/utilities/const.dart';
 import 'package:page_transition/page_transition.dart';
@@ -27,6 +26,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => TutorProvider()),
         ChangeNotifierProvider(create: (_) => CoursesProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: const MyApp(),
     ),
@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
                   splash: Image.asset(ImagesPath.logo),
                   nextScreen:
                       authProvider.currentUser != null
-                          ? LoadingOverlay(child: CoursesPage())
+                          ? BottomNavBar()
                           : LoadingOverlay(child: LoginPage()),
                   splashTransition: SplashTransition.fadeTransition,
                   pageTransitionType: PageTransitionType.bottomToTop,

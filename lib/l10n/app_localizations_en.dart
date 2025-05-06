@@ -598,4 +598,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sortByLevel => 'Sort by level';
+
+  @override
+  String get noTutorsAvailable => 'No tutors available.';
+
+  @override
+  String get firstName => 'First Name';
+
+  @override
+  String get lastName => 'Last Name';
+
+  @override
+  String get profileUpdatedSuccessfully => 'Profile updated successfully';
+
+  @override
+  String get errorUpdatingProfile => 'Error updating profile';
 }

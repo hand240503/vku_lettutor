@@ -1276,6 +1276,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sort by level'**
   String get sortByLevel;
+
+  /// No description provided for @noTutorsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No tutors available.'**
+  String get noTutorsAvailable;
+
+  /// No description provided for @firstName.
+  ///
+  /// In en, this message translates to:
+  /// **'First Name'**
+  String get firstName;
+
+  /// No description provided for @lastName.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Name'**
+  String get lastName;
+
+  /// No description provided for @profileUpdatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated successfully'**
+  String get profileUpdatedSuccessfully;
+
+  /// No description provided for @errorUpdatingProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating profile'**
+  String get errorUpdatingProfile;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

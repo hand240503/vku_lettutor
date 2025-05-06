@@ -208,5 +208,10 @@
   "resetFilter": "Reset Filters",
   "selectLevel": "Select level",
   "selectCategory": "Select category",
-  "sortByLevel": "Sort by level"
+  "sortByLevel": "Sort by level",
+  "noTutorsAvailable": "No tutors available.",
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "profileUpdatedSuccessfully": "Profile updated successfully",
+  "errorUpdatingProfile": "Error updating profile"
 }

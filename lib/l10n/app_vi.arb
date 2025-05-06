@@ -208,5 +208,10 @@
   "resetFilter": "Đặt lại bộ tìm kiếm",
   "selectLevel": "Chọn cấp độ",
   "selectCategory": "Chọn danh mục",
-  "sortByLevel": "Sắp xếp theo cấp độ"
+  "sortByLevel": "Sắp xếp theo cấp độ",
+  "noTutorsAvailable": "Không có giáo viên nào.",
+  "firstName": "Họ",
+  "lastName": "Tên",
+  "profileUpdatedSuccessfully": "Cập nhật hồ sơ thành công",
+  "errorUpdatingProfile": "Lỗi cập nhật hồ sơ"
 }

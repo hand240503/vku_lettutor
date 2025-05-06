@@ -24,10 +24,8 @@ class AuthProvider extends ChangeNotifier {
         email,
         password,
       );
-      if (user != null) {
-        saveLoginInfo(user);
-        return true;
-      }
+      saveLoginInfo(user);
+      return true;
     } catch (e) {
       print('Sign-in error: $e');
     }
@@ -46,10 +44,8 @@ class AuthProvider extends ChangeNotifier {
         password: password,
         additionalData: additionalData,
       );
-      if (user != null) {
-        saveLoginInfo(user);
-        return true;
-      }
+      saveLoginInfo(user);
+      return true;
     } catch (e) {
       print('Registration error: $e');
     }
@@ -67,16 +63,6 @@ class AuthProvider extends ChangeNotifier {
     return await _authRepository.forgotPassword(email);
   }
 
-  // Đổi mật khẩu
-  Future<bool> changePassword(
-    String currentPassword,
-    String newPassword,
-  ) async {
-    return await _authRepository.changePassword(
-      currentPassword: currentPassword,
-      newPassword: newPassword,
-    );
-  }
 
   // Lưu thông tin người dùng vào `currentUser`
   void saveLoginInfo(User currentUser) {
@@ -107,6 +93,7 @@ class AuthProvider extends ChangeNotifier {
       'languages': user.languages,
       'birthday': user.birthday,
       'isActive': user.isActive,
+      'avatar': user.avatar,
     });
     await prefs.setString('user_data', userData);
   }
@@ -127,9 +114,11 @@ class AuthProvider extends ChangeNotifier {
         languages: jsonMap['languages'],
         birthday: jsonMap['birthday'],
         isActive: jsonMap['isActive'],
+        avatar: jsonMap['avatar'],
       );
 
       saveLoginInfo(user);
     }
   }
+
 }

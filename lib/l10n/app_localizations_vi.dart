@@ -598,4 +598,19 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get sortByLevel => 'Sắp xếp theo cấp độ';
+
+  @override
+  String get noTutorsAvailable => 'Không có giáo viên nào.';
+
+  @override
+  String get firstName => 'Họ';
+
+  @override
+  String get lastName => 'Tên';
+
+  @override
+  String get profileUpdatedSuccessfully => 'Cập nhật hồ sơ thành công';
+
+  @override
+  String get errorUpdatingProfile => 'Lỗi cập nhật hồ sơ';
 }
