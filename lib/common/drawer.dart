@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lettutor/common/loading_overlay.dart';
 import 'package:lettutor/l10n/app_localizations.dart';
 import 'package:lettutor/pages/login_page/login_page.dart';
+import 'package:lettutor/router/app_routes.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,7 +39,8 @@ class CustomDrawer extends StatelessWidget {
                           width: double.maxFinite,
                           fit: BoxFit.fitHeight,
                           imageUrl:
-                              "https://randomuser.me/api/portraits/men/75.jpg", // Sử dụng URL avatar từ user
+                              authProvider.currentUser?.avatar ??
+                              "https://randomuser.me/api/portraits/men/75.jpg", // Sử dụng URL avatar từ user hoặc hình ảnh mặc định
                           progressIndicatorBuilder:
                               (context, url, downloadProgress) => Center(
                                 child: CircularProgressIndicator(
@@ -47,7 +49,7 @@ class CustomDrawer extends StatelessWidget {
                               ),
                           errorWidget:
                               (context, url, error) => Image.network(
-                                "https://sandbox.api.lettutor.com/avatar/default-avatar.jpg", // Hình ảnh mặc định nếu có lỗi
+                                "https://randomuser.me/api/portraits/men/75.jpg", // Hình ảnh mặc định nếu có lỗi
                               ),
                         ),
                       ),
@@ -68,7 +70,7 @@ class CustomDrawer extends StatelessWidget {
             ),
             onTap: () {
               Navigator.pop(context);
-              Navigator.pushNamed(context, '/profilePage');
+              Navigator.pushNamed(context, AppRoutes.courses);
             },
           ),
           ListTile(
@@ -88,26 +90,7 @@ class CustomDrawer extends StatelessWidget {
             ),
             onTap: () {
               Navigator.pop(context);
-              Navigator.pushNamed(context, "/coursesPage");
-            },
-          ),
-          ListTile(
-            title: Row(
-              children: [
-                Icon(Icons.people_alt, size: 36, color: Colors.blue),
-                SizedBox(width: 12),
-                Text(
-                  AppLocalizations.of(context)!.becomeATutor,
-                  style: TextStyle(
-                    color: Colors.black87,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            onTap: () {
-              Navigator.pushNamed(context, "/becomeATeacherPage");
+              Navigator.pushNamed(context, AppRoutes.courses);
             },
           ),
           ListTile(
@@ -177,7 +160,6 @@ class CustomDrawer extends StatelessWidget {
       prefs.clear();
       authProvider.clearUserInfo();
     } catch (e) {
-      // Xử lý lỗi nếu có
       print('Lỗi khi đăng xuất: $e');
     }
   }

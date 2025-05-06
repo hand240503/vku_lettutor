@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/pages/courses_page/courses_page.dart';
 import 'package:lettutor/pages/list_teacher_page/list_teacher_page.dart';
+import 'package:lettutor/pages/settingsPage/setting_page.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
 class BottomNavBar extends StatefulWidget {
@@ -30,11 +31,16 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
-    final screens = [const ListTeacherPage(), const CoursesPage()];
+    final screens = [
+      const ListTeacherPage(),
+      const CoursesPage(),
+      const SettingPage(),
+    ];
 
     final items = [
       _buildNavItem(icon: Icons.home, title: 'Home'),
       _buildNavItem(icon: Icons.school, title: 'Courses'),
+      _buildNavItem(icon: Icons.settings, title: 'Settings'),
     ];
 
     return ValueListenableBuilder<bool>(

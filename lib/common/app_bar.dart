@@ -62,7 +62,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             if (showMenu) {
               Scaffold.of(context).openEndDrawer();
             } else {
-              Navigator.of(context).pop();
+              Navigator.maybePop(context);
             }
           },
         ),

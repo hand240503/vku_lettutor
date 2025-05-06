@@ -45,7 +45,6 @@ class _ListTeacherPageState extends State<ListTeacherPage> {
     setState(() {
       _isLoadingPagination = true;
     });
-
     final tutorProvider = Provider.of<TutorProvider>(context, listen: false);
 
     // Kiểm tra xem bộ lọc có thay đổi không
@@ -62,11 +61,8 @@ class _ListTeacherPageState extends State<ListTeacherPage> {
     }
 
     try {
-      // Làm sạch dữ liệu cũ
-      tutorProvider
-          .clearTutors(); // Phương thức này xóa dữ liệu trong danh sách
+      tutorProvider.clearTutors();
 
-      // Tải lại dữ liệu
       await tutorProvider.fetchTutorsByPage(
         pageIndex: page,
         pageSize: _pageSize,
@@ -74,7 +70,6 @@ class _ListTeacherPageState extends State<ListTeacherPage> {
         specialities: _currentSpecialities,
       );
 
-      // Cập nhật số trang
       await tutorProvider.fetchTotalPages(pageSize: _pageSize);
     } catch (error) {
       _showErrorMessage(error.toString());
@@ -165,33 +160,6 @@ class _ListTeacherPageState extends State<ListTeacherPage> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildContent(TutorProvider tutorProvider) {
-    if (_isLoadingPagination) {
-      return const Center(child: CircularProgressIndicator());
-    } else if (tutorProvider.tutors.isEmpty) {
-      return Center(
-        child: Text('No tutors found.', style: const TextStyle(fontSize: 16)),
-      );
-    } else {
-      return ListTeacherComponent();
-    }
-  }
-
-  Widget _buildPaginator(TutorProvider tutorProvider) {
-    return Container(
-      alignment: Alignment.center,
-      padding: const EdgeInsets.all(16),
-      child: NumberPaginator(
-        numberPages:
-            tutorProvider.totalPages > 0 ? tutorProvider.totalPages : 1,
-        initialPage: tutorProvider.currentPage,
-        onPageChange: (int index) async {
-          await loadDataPage(index, _currentSearch, _currentSpecialities);
-        },
       ),
     );
   }

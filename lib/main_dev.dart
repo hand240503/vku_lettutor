@@ -10,6 +10,7 @@ import 'package:lettutor/providers/auth_provider.dart';
 import 'package:lettutor/providers/courses_provider.dart';
 import 'package:lettutor/providers/setting_provider.dart';
 import 'package:lettutor/providers/tutor_provider.dart';
+import 'package:lettutor/providers/user_provider.dart';
 import 'package:lettutor/router/app_routes.dart';
 import 'package:lettutor/utilities/const.dart';
 import 'package:page_transition/page_transition.dart';
@@ -25,6 +26,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => TutorProvider()),
         ChangeNotifierProvider(create: (_) => CoursesProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: const MyApp(),
     ),

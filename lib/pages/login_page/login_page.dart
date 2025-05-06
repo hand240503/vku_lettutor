@@ -24,6 +24,7 @@ class _LoginPageState extends State<LoginPage> {
   bool rememberUser = false;
 
   bool loading = true;
+  bool isLoading = false;
   bool _isLocaleVietnamese = true;
 
   @override
@@ -255,30 +256,49 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildLoginButton() {
     return ElevatedButton(
-      onPressed: () async {
-        print("Login button pressed");
-        if (_formKey.currentState?.validate() ?? false) {
-          var authProvider = Provider.of<AuthProvider>(context, listen: false);
-          handleLoginByAccount(authProvider);
-        }
-      },
+      onPressed:
+          isLoading
+              ? null // disable button while loading
+              : () async {
+                if (_formKey.currentState?.validate() ?? false) {
+                  var authProvider = Provider.of<AuthProvider>(
+                    context,
+                    listen: false,
+                  );
+                  handleLoginByAccount(authProvider);
+                }
+              },
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         backgroundColor: const Color.fromRGBO(4, 104, 211, 1.0),
         minimumSize: const Size.fromHeight(52),
       ),
-      child: Text(
-        AppLocalizations.of(context)!.login.toUpperCase(),
-        style: TextStyle(
-          fontSize: 20,
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
+      child:
+          isLoading
+              ? const SizedBox(
+                height: 24,
+                width: 24,
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                  strokeWidth: 2.5,
+                ),
+              )
+              : Text(
+                AppLocalizations.of(context)!.login.toUpperCase(),
+                style: const TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
     );
   }
 
   void handleLoginByAccount(AuthProvider authProvider) async {
+    setState(() {
+      isLoading = true;
+    });
+
     try {
       String email = emailController.text;
       String password = passwordController.text;
@@ -292,7 +312,7 @@ class _LoginPageState extends State<LoginPage> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text("Login successful")));
-        Navigator.pushReplacementNamed(context, AppRoutes.courses);
+        Navigator.pushNamed(context, '/bottomNavBar');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -305,6 +325,10 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text("An error occurred: $e")));
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 

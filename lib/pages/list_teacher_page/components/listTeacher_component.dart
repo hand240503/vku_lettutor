@@ -21,7 +21,6 @@ class _ListTeacherComponentState extends State<ListTeacherComponent> {
   @override
   Widget build(BuildContext context) {
     TutorProvider tutorProvider = context.watch<TutorProvider>();
-    print(tutorProvider.tutors.length);
 
     return Container(
       padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
@@ -41,34 +40,45 @@ class _ListTeacherComponentState extends State<ListTeacherComponent> {
               ),
             ),
           ),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: tutorProvider.tutors.length,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DetailATeacherPage(),
-                      settings: RouteSettings(
-                        arguments: {
-                          'tutor': tutorProvider.tutors[index],
-                          'index': index,
-                        },
-                      ),
-                    ),
-                  );
-                },
-                child: TutorTeacherCard(
-                  tutor: tutorProvider.tutors[index],
-                  isFavorite: true,
-                  onClickFavorite: () {},
+          if (tutorProvider.tutors.isEmpty)
+            Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 32),
+                child: Text(
+                  AppLocalizations.of(context)!.noTutorsAvailable,
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
                 ),
-              );
-            },
-          ),
+              ),
+            )
+          else
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: tutorProvider.tutors.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailATeacherPage(),
+                        settings: RouteSettings(
+                          arguments: {
+                            'tutor': tutorProvider.tutors[index],
+                            'index': index,
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                  child: TutorTeacherCard(
+                    tutor: tutorProvider.tutors[index],
+                    isFavorite: true,
+                    onClickFavorite: () {},
+                  ),
+                );
+              },
+            ),
         ],
       ),
     );

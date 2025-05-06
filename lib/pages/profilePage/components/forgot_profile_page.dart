@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:lettutor/router/app_routes.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lettutor/l10n/app_localizations.dart';
+import 'package:lettutor/providers/auth_provider.dart';
+import 'package:lettutor/providers/setting_provider.dart';
+import 'package:lettutor/utilities/validator.dart';
 import 'package:provider/provider.dart';
 
-import '../../l10n/app_localizations.dart';
-import '../../providers/auth_provider.dart';
-//import '../../providers/user_provider.dart';
-import '../../providers/setting_provider.dart';
-import '../../utilities/validator.dart';
-
-class ForgotPasswordPage extends StatefulWidget {
-  const ForgotPasswordPage({super.key});
+class ForgotProfilePage extends StatefulWidget {
+  // Removed force parameter here
+  const ForgotProfilePage({super.key}); // Removed force parameter here
 
   @override
-  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
+  State<ForgotProfilePage> createState() => _ForgotProfilePageState();
 }
 
-class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+class _ForgotProfilePageState extends State<ForgotProfilePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late Color myColor;
   late Size mediaSize;
@@ -57,25 +55,23 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(
-          kToolbarHeight,
-        ), // Định kích thước AppBar
+        preferredSize: const Size.fromHeight(kToolbarHeight),
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2), // Màu bóng
-                spreadRadius: 2, // Độ lan rộng của bóng
-                blurRadius: 6, // Độ mờ của bóng
-                offset: Offset(0, 3), // Điều chỉnh vị trí bóng (X, Y)
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 2,
+                blurRadius: 6,
+                offset: Offset(0, 3),
               ),
             ],
           ),
           child: AppBar(
             automaticallyImplyLeading: false,
             backgroundColor: Colors.white,
-            elevation: 0, // Tắt bóng mặc định của AppBar
+            elevation: 0,
             title: SvgPicture.asset(
               'lib/assets/images/lettutor_logo.svg',
               semanticsLabel: 'My SVG',
@@ -120,7 +116,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   }
 
   Widget _buildForm() {
-    //var userProvider = Provider.of<UserProvider>(context);
     return Form(
       key: _formKey,
       autovalidateMode: AutovalidateMode.always,
@@ -159,8 +154,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           ),
           const SizedBox(height: 12),
           _buildResetButton(),
-          const SizedBox(height: 24),
-          _buildOtherLogin(),
         ],
       ),
     );
@@ -198,7 +191,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         ),
         hintText: hintText,
         hintStyle: TextStyle(color: Colors.grey.shade400),
-        isDense: true, // Added this
+        isDense: true,
         contentPadding: EdgeInsets.all(16),
         suffixIcon: isPassword ? Icon(Icons.remove_red_eye) : null,
       ),
@@ -215,10 +208,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         }
       },
       style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          // border radius
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         backgroundColor: const Color.fromRGBO(4, 104, 211, 1.0),
         minimumSize: const Size.fromHeight(52),
       ),
@@ -233,107 +223,18 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     );
   }
 
-  Widget _buildOtherLogin() {
-    return Center(
-      child: Column(
-        children: [
-          _buildGreyText(AppLocalizations.of(context)!.orContinueWith),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Tab(
-                icon: SvgPicture.asset("lib/assets/images/facebook-logo.svg"),
-              ),
-              Tab(icon: SvgPicture.asset("lib/assets/images/google-logo.svg")),
-              Padding(
-                padding: const EdgeInsets.only(left: 6),
-                child: MaterialButton(
-                  onPressed: () {},
-                  textColor: Colors.white,
-                  minWidth: 32,
-                  padding: const EdgeInsets.all(8),
-                  shape: CircleBorder(
-                    side: BorderSide(
-                      width: 1,
-                      style: BorderStyle.solid,
-                      color: myColor,
-                    ),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(
-                      10,
-                    ), // Adjust the radius as needed
-                    child: const Icon(
-                      Icons.phone_android,
-                      color: Colors.grey,
-                      size: 30,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, AppRoutes.signUp);
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildGreyText(AppLocalizations.of(context)!.dontHaveAccount),
-                Text(
-                  AppLocalizations.of(context)!.signUp,
-                  style: TextStyle(
-                    color: myColor,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context, AppRoutes.login);
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildGreyText(
-                  AppLocalizations.of(context)!.alreadyHaveAccount,
-                ),
-                Text(
-                  AppLocalizations.of(context)!.login,
-                  style: TextStyle(
-                    color: myColor,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   // handle forgot password
   void handleResetPassword(AuthProvider authProvider) async {
     bool success = await authProvider.sendPasswordResetEmail(
       emailController.text,
     );
     if (success) {
-      print('Email đã được gửi'); // Thêm dòng log ở đây
+      print('Email đã được gửi');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Email yêu cầu đặt lại mật khẩu đã được gửi')),
       );
     } else {
-      print('Email không được gửi'); // Thêm dòng log ở đây
+      print('Email không được gửi');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Gửi email thất bại, vui lòng thử lại')),
       );

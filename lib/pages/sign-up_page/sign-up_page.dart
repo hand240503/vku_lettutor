@@ -299,6 +299,7 @@ class _SignUpPageState extends State<SignUpPage> {
         "languages": "",
         "phone": "",
         "roles": ["user"],
+        "avatar": "https://randomuser.me/api/portraits/men/75.jpg",
       };
 
       authProvider

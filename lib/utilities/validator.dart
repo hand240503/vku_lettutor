@@ -33,7 +33,7 @@ class Validator {
   }
 
   static String? validateName(String value) {
-    if (value.length < 3) {
+    if (value.isEmpty) {
       return '🚩 Username is too short.';
     } else {
       return null;
