@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lettutor/data/model/courses/course.dart';
+import 'package:lettutor/pages/detail_course_page/detail-course_page.dart';
 //import 'package:lettutor/pages/detailCoursePage/detail-course_page.dart';
 import 'package:lettutor/utilities/const.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -24,7 +25,7 @@ class _CourseCardState extends State<CourseCard> {
             context,
             MaterialPageRoute(
               //Todo: DetailCoursePage
-              builder: (context) => Container(), //DetailCoursePage(),
+              builder: (context) => DetailCoursePage(), //DetailCoursePage(),
               settings:
               RouteSettings(arguments: {
                 'course': widget.course,

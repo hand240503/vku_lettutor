@@ -63,3 +63,10 @@ class Specialities {
     ),
   ];
 }
+
+class CourseOverView {
+  static const takenReason =
+      "Our world is rapidly changing thanks to new technology, and the vocabulary needed to discuss modern life is evolving almost daily. In this course you will learn the most up-to-date terminology from expertly crafted lessons as well from your native-speaking tutor.";
+  static const achievement =
+      "You will learn vocabulary related to timely topics like remote work, artificial intelligence, online privacy, and more. In addition to discussion questions, you will practice intermediate level speaking tasks such as using data to describe trends.";
+}

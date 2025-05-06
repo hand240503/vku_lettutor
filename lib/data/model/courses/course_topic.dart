@@ -23,6 +23,12 @@ class CourseTopic {
     this.updatedAt,
   });
 
+
+  @override
+  String toString() {
+    return 'CourseTopic{id: $id, courseId: $courseId, orderCourse: $orderCourse, name: $name, nameFile: $nameFile, description: $description, videoUrl: $videoUrl, createdAt: $createdAt, updatedAt: $updatedAt}';
+  }
+
   factory CourseTopic.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 

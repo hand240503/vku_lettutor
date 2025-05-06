@@ -4,6 +4,7 @@ import 'package:lettutor/pages/list_teacher_page/list_teacher_page.dart';
 import 'package:lettutor/pages/login_page/login_page.dart';
 import 'package:lettutor/pages/sign-up_page/sign-up_page.dart';
 import '../pages/courses_page/courses_page.dart';
+import '../pages/detail_course_page/detail-course_page.dart';
 
 class AppRoutes {
   static const String login = '/loginPage';
@@ -11,6 +12,7 @@ class AppRoutes {
   static const String forgotPassword = '/forgotPasswordPage';
   static const String listTeacher = '/listTeacherPage';
   static const String courses = '/coursesPage';
+  static const String detailCourse = '/detailCoursePage';
 
   static Map<String, WidgetBuilder> get routes {
     return {
@@ -19,6 +21,7 @@ class AppRoutes {
       forgotPassword: (context) => const ForgotPasswordPage(),
       listTeacher: (context) => const ListTeacherPage(),
       courses: (context) => const CoursesPage(),
+      detailCourse: (context) => const DetailCoursePage(),
     };
   }
 }
