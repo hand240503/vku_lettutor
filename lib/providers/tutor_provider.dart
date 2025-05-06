@@ -10,105 +10,141 @@ class TutorProvider with ChangeNotifier {
   final List<Tutor> _tutors = [];
   List<Tutor> get tutors => _tutors;
 
-  DocumentSnapshot? _lastDocument;
   bool _hasMoreData = true;
   bool get hasMoreData => _hasMoreData;
 
   int _totalPages = 0;
   int get totalPages => _totalPages;
 
+  int perPage = 5;
+  int currentPage = 1;
+
+  String? _searchQuery;
+  int? _selectedLevel;
+  String? _selectedCategory;
+  String? _orderBy;
+  String? _order;
+
   List<LearnTopic> _categories = [];
   List<LearnTopic> get categories => _categories;
 
-  Future<void> fetchTutors({required int limit}) async {
-    if (!_hasMoreData) return;
+  // Biến lưu lại lastDoc để phân trang
+  DocumentSnapshot? _lastDoc;
+  DocumentSnapshot? get lastDoc => _lastDoc;
 
+  // Hàm cập nhật các bộ lọc
+  void updateFilters({
+    String? search,
+    int? level,
+    String? category,
+    String? orderBy,
+    String? order,
+  }) {
+    _searchQuery = search;
+    _selectedLevel = level;
+    _selectedCategory = category;
+    _orderBy = orderBy;
+    _order = order;
+    notifyListeners();
+  }
+
+  // Hàm fetch dữ liệu giáo viên với phân trang
+  Future<void> fetchTutorsByPage({
+    required int pageIndex,
+    required int pageSize,
+    String? search,
+    List<String>? specialities,
+  }) async {
     try {
-      await _tutorRepository.getTutors(
-        onSuccess: (List<Tutor> newTutors, DocumentSnapshot? lastDoc) {
-          if (newTutors.isEmpty) {
-            _hasMoreData = false;
-          } else {
-            _tutors.addAll(newTutors);
-            _lastDocument = lastDoc;
+      // Reset lastDoc nếu bạn quay lại trang đầu (pageIndex == 0)
+      if (pageIndex == 0) {
+        _lastDoc = null; // Reset lastDoc để đảm bảo không sử dụng dữ liệu cũ
+      }
+
+      // Gọi phương thức phân trang của repository
+      await _tutorRepository.getTutorListWithPagination(
+        size: pageSize,
+        page: pageIndex,
+        orderBy: _orderBy,
+        order: _order,
+        level: _selectedLevel != null ? [_selectedLevel!] : null,
+        search: search,
+        categoryStr: specialities,
+        lastDoc: _lastDoc,
+        onSuccess: (List<Tutor> data, DocumentSnapshot? lastVisible) {
+          if (pageIndex == 0) {
+            _tutors.clear(); // Reset danh sách khi chuyển trang đầu
           }
+
+          // Thêm dữ liệu mới vào danh sách tutors
+          if (data.isNotEmpty) {
+            _tutors.addAll(data);
+            _lastDoc = lastVisible; // Cập nhật lastDoc
+
+            // Nếu dữ liệu tải về đủ kích thước trang, có thể có dữ liệu tiếp theo
+            _hasMoreData = data.length == pageSize;
+          } else {
+            // Nếu không có dữ liệu mới, đặt _hasMoreData thành false
+            _hasMoreData = false;
+          }
+
+          currentPage = pageIndex;
           notifyListeners();
         },
         onFail: (String error) {
           _hasMoreData = false;
+          debugPrint("Error fetching tutors: $error");
           notifyListeners();
         },
-        limit: limit,
       );
     } catch (e) {
       _hasMoreData = false;
+      debugPrint("Exception: $e");
       notifyListeners();
     }
   }
 
-  Future<void> fetchTutorById(String tutorId) async {
-    try {
-      await _tutorRepository.getTutorById(
-        tutorId: tutorId,
-        onSuccess: (Tutor tutor) {
-          notifyListeners();
-        },
-        onFail: (String error) {
-          notifyListeners();
-        },
-      );
-    } catch (e) {
-      notifyListeners();
-    }
-  }
-
-  Future<void> fetchTutorsByPage({
-    required int pageIndex,
-    required int pageSize,
-  }) async {
-    try {
-      await _tutorRepository.getTutorsByPage(
-        pageIndex: pageIndex,
-        pageSize: pageSize,
-        onSuccess: (List<Tutor> data) {
-          // Nếu trang không phải là trang đầu, chỉ cần thêm dữ liệu mới vào danh sách hiện tại.
-          if (pageIndex > 0) {
-            _tutors.addAll(data);
-          } else {
-            // Nếu là trang đầu, thay thế dữ liệu hiện tại bằng dữ liệu mới.
-            _tutors
-              ..clear()
-              ..addAll(data);
-          }
-          notifyListeners();
-        },
-        onFail: (String error) {
-          _tutors.clear();
-          notifyListeners();
-        },
-        lastDocument:
-            _lastDocument, // Truyền lastDocument vào để phân trang chính xác
-      );
-    } catch (e) {
-      _tutors.clear();
-      notifyListeners();
-    }
-  }
-
+  // Hàm tính tổng số trang dựa trên kết quả lọc
   Future<void> fetchTotalPages({required int pageSize}) async {
-    await _tutorRepository.getTotalPages(
-      pageSize: pageSize,
-      onSuccess: (int pages) {
-        _totalPages = pages;
-        notifyListeners();
-      },
-      onFail: (_) {
-        _totalPages = 0;
-        notifyListeners();
-      },
-    );
+    try {
+      final total = await _tutorRepository.countFilteredTutors(
+        search: _searchQuery,
+        level: _selectedLevel != null ? [_selectedLevel!] : null,
+        categoryStr: _selectedCategory != null ? [_selectedCategory!] : null,
+      );
+      _totalPages = (total / pageSize).ceil();
+      notifyListeners();
+    } catch (e) {
+      _totalPages = 0;
+      debugPrint("Error calculating total pages: $e");
+      notifyListeners();
+    }
   }
 
+  // Hàm reset lại trạng thái, có thể giữ lại các bộ lọc hay không
+  void resetState({bool resetFilters = false}) {
+    _tutors.clear();
+    _hasMoreData = true;
+    currentPage = 1;
+
+    if (resetFilters) {
+      _searchQuery = null;
+      _selectedLevel = null;
+      _selectedCategory = null;
+      _orderBy = null;
+      _order = null;
+    }
+
+    notifyListeners();
+  }
+
+  // Hàm đặt trang hiện tại
+  void setCurrentPage(int page) {
+    currentPage = page;
+    notifyListeners();
+  }
+
+  // Hàm lấy danh mục (categories)
   Future<void> fetchCategories() async {
     try {
       await _tutorRepository.getCategories(
@@ -119,13 +155,18 @@ class TutorProvider with ChangeNotifier {
         onFail: (String error) {
           _categories = [];
           notifyListeners();
-          print("Lỗi khi lấy categories: $error");
+          debugPrint("Lỗi khi lấy categories: $error");
         },
       );
     } catch (e) {
       _categories = [];
       notifyListeners();
-      print("Exception khi lấy categories: $e");
+      debugPrint("Exception khi lấy categories: $e");
     }
+  }
+
+  void clearTutors() {
+    tutors.clear();
+    notifyListeners();
   }
 }

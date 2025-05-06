@@ -1,123 +1,127 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lettutor/data/model/tutor/tutor.dart';
-import 'package:lettutor/data/model/user/learn_topic.dart';
+  import 'package:cloud_firestore/cloud_firestore.dart';
+  import 'package:lettutor/data/model/tutor/tutor.dart';
+  import 'package:lettutor/data/model/user/learn_topic.dart';
 
-class TutorRepository {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  class TutorRepository {
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> getTutorById({
-    required String tutorId,
-    required Function(Tutor) onSuccess,
-    required Function(String) onFail,
-  }) async {
-    try {
-      DocumentSnapshot doc =
-          await _firestore.collection('tutors').doc(tutorId).get();
-      if (doc.exists) {
-        onSuccess(Tutor.fromFirestore(doc));
-      } else {
-        onFail("Tutor with ID $tutorId not found.");
+    Future<void> getTutorListWithPagination({
+      required int size,
+      required int page,
+      String? orderBy,
+      String? order,
+      List<int>? level,
+      String? search,
+      List<String>? categoryStr,
+      DocumentSnapshot? lastDoc, // Thêm tham số lastDoc
+      required Function(List<Tutor> data, DocumentSnapshot? lastVisible)
+      onSuccess,
+      required Function(String error) onFail,
+    }) async {
+      try {
+        Query query = FirebaseFirestore.instance
+            .collection('tutors')
+            .limit(size)
+            .orderBy(orderBy ?? 'name', descending: order == 'desc');
+
+        if (lastDoc != null) {
+          query = query.startAfterDocument(lastDoc); // Tiếp tục từ lastDoc
+        }
+
+        // Thêm các bộ lọc khác nếu có
+        if (level != null) {
+          query = query.where('level', whereIn: level);
+        }
+        if (search != null) {
+          query = query
+              .where('name', isGreaterThanOrEqualTo: search)
+              .where('name', isLessThanOrEqualTo: '$search\uf8ff');
+        }
+        if (categoryStr != null) {
+          query = query.where('category', whereIn: categoryStr);
+        }
+
+        final snapshot = await query.get();
+
+        if (snapshot.docs.isNotEmpty) {
+          List<Tutor> tutors =
+              snapshot.docs.map((doc) {
+                return Tutor.fromFirestore(doc);
+              }).toList();
+
+          DocumentSnapshot? lastVisible =
+              snapshot.docs.isNotEmpty ? snapshot.docs.last : null;
+          onSuccess(tutors, lastVisible);
+        } else {
+          onSuccess([], null);
+        }
+      } catch (e) {
+        onFail("Error: $e");
       }
-    } catch (e) {
-      onFail("Error retrieving tutor: $e");
     }
-  }
 
-  Future<void> getTutors({
-    required Function(List<Tutor>, DocumentSnapshot?) onSuccess,
-    required Function(String) onFail,
-    required int limit,
-  }) async {
-    try {
-      Query query = _firestore.collection('tutors').limit(limit);
+    Future<int> countFilteredTutors({
+      String? search,
+      List<int>? level,
+      List<String>? categoryStr,
+    }) async {
+      try {
+        Query query = _firestore.collection('tutors');
 
-      QuerySnapshot snapshot = await query.get();
+        if (level != null && level.isNotEmpty) {
+          final levelStrings = level.map((e) => (e + 1).toString()).toList();
+          query = query.where('level', whereIn: levelStrings);
+        }
 
-      List<Tutor> tutors =
-          snapshot.docs.map((doc) => Tutor.fromFirestore(doc)).toList();
+        if (categoryStr != null && categoryStr.isNotEmpty) {
+          final categoryRefs =
+              categoryStr.map((id) {
+                return _firestore.collection('categories').doc(id);
+              }).toList();
+          query = query.where('categories', arrayContainsAny: categoryRefs);
+        }
 
-      if (tutors.isEmpty) {
-        onFail("No more tutors found.");
-      } else {
-        onSuccess(tutors, snapshot.docs.isEmpty ? null : snapshot.docs.last);
+        final snapshot = await query.get();
+        List<Tutor> tutors =
+            snapshot.docs.map((doc) => Tutor.fromFirestore(doc)).toList();
+
+        if (search != null && search.isNotEmpty) {
+          final lowerSearch = search.toLowerCase();
+          tutors =
+              tutors.where((tutor) {
+                final name = tutor.name?.toLowerCase() ?? '';
+                return name.contains(lowerSearch);
+              }).toList();
+        }
+
+        return tutors.length;
+      } catch (e) {
+        print('Error counting tutors: $e');
+        return 0;
       }
-    } catch (e) {
-      onFail("Error retrieving tutors: $e");
     }
-  }
 
-  Future<void> getTutorsByPage({
-    required int pageIndex,
-    required int pageSize,
-    required Function(List<Tutor>) onSuccess,
-    required Function(String) onFail,
-    DocumentSnapshot? lastDocument,
-  }) async {
-    try {
-      Query query = _firestore
-          .collection('tutors')
-          .orderBy(FieldPath.documentId)
-          .limit(pageSize);
+    Future<void> getCategories({
+      required Function(List<LearnTopic>) onSuccess,
+      required Function(String error) onFail,
+    }) async {
+      try {
+        final QuerySnapshot snapshot =
+            await _firestore.collection('categories').get();
 
-      if (lastDocument != null) {
-        query = query.startAfterDocument(
-          lastDocument,
-        ); // Start after the last document from the previous page
+        List<LearnTopic> categories =
+            snapshot.docs.map((doc) {
+              final data = doc.data() as Map<String, dynamic>;
+              return LearnTopic(
+                id: doc.id.hashCode,
+                key: data['key'] as String?,
+                name: data['title'] as String?,
+              );
+            }).toList();
+
+        onSuccess(categories);
+      } catch (e) {
+        onFail("Error retrieving categories: $e");
       }
-
-      QuerySnapshot snapshot = await query.get();
-
-      if (snapshot.docs.isEmpty) {
-        onSuccess([]);
-        return;
-      }
-
-      List<Tutor> tutors =
-          snapshot.docs.map((doc) => Tutor.fromFirestore(doc)).toList();
-
-      onSuccess(tutors);
-    } catch (e) {
-      onFail("Error retrieving tutors: $e");
     }
   }
-
-  Future<void> getTotalPages({
-    required int pageSize,
-    required Function(int totalPages) onSuccess,
-    required Function(String error) onFail,
-  }) async {
-    try {
-      final QuerySnapshot snapshot =
-          await _firestore.collection('tutors').get();
-      final int totalDocs = snapshot.docs.length;
-      final int totalPages = (totalDocs / pageSize).ceil();
-      onSuccess(totalPages);
-    } catch (e) {
-      onFail("Error counting tutors: $e");
-    }
-  }
-
-  Future<void> getCategories({
-    required Function(List<LearnTopic>) onSuccess,
-    required Function(String error) onFail,
-  }) async {
-    try {
-      final QuerySnapshot snapshot =
-          await _firestore.collection('categories').get();
-
-      List<LearnTopic> categories =
-          snapshot.docs.map((doc) {
-            final data = doc.data() as Map<String, dynamic>;
-            return LearnTopic(
-              id: doc.id.hashCode,
-              key: data['key'] as String?,
-              name: data['title'] as String?,
-            );
-          }).toList();
-
-      onSuccess(categories);
-    } catch (e) {
-      onFail("Error retrieving categories: $e");
-    }
-  }
-}

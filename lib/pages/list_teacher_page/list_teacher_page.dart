@@ -4,7 +4,6 @@ import 'package:lettutor/common/drawer.dart';
 import 'package:lettutor/pages/list_teacher_page/components/banner_component.dart';
 import 'package:lettutor/pages/list_teacher_page/components/filter_component.dart';
 import 'package:lettutor/pages/list_teacher_page/components/listTeacher_component.dart';
-import 'package:lettutor/providers/auth_provider.dart';
 import 'package:lettutor/providers/tutor_provider.dart';
 import 'package:number_paginator/number_paginator.dart';
 import 'package:provider/provider.dart';
@@ -21,125 +20,27 @@ class _ListTeacherPageState extends State<ListTeacherPage> {
   late Size mediaSize;
 
   bool _isLoadingPagination = false;
-  bool _hasFetched = false;
-  int _currentPage = 0;
   final int _pageSize = 2;
-  String _tutorName = '';
-  List<String> _specialities = [];
-  Map<String, bool> _nationalities = {};
+
+  String? _currentSearch;
+  List<String>? _currentSpecialities;
 
   @override
   void initState() {
+    myColor = Colors.blue;
     super.initState();
+    loadDataPage(0, null, null);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _fetchTutors();
-      _fetchCategories();
-    });
-  }
-
-  Future<void> _fetchTutors() async {
-    final tutorProvider = Provider.of<TutorProvider>(context, listen: false);
-
-    setState(() {
-      _isLoadingPagination = true;
-    });
-
-    // Lấy dữ liệu của trang đầu tiên
-    await tutorProvider.fetchTutors(limit: _pageSize).whenComplete(() async {
-      await tutorProvider.fetchTotalPages(pageSize: _pageSize);
-
-      if (!tutorProvider.hasMoreData) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Không thể lấy danh sách tutor hoặc đã hết dữ liệu'),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
-
-      if (mounted) {
-        setState(() {
-          _hasFetched = true;
-          _isLoadingPagination = false;
-        });
-      }
-    });
-  }
-
-  // Hàm làm mới trang và tải lại dữ liệu
-  Future<void> refreshHomePage() async {
-    setState(() {
-      _isLoadingPagination = true;
-    });
-
-    TutorProvider tutorProvider = context.read<TutorProvider>();
-    AuthProvider authProvider = context.read<AuthProvider>();
-
-    // Làm mới dữ liệu
-    await Future.wait([
-      tutorProvider.fetchTutors(limit: _pageSize),
-    ]).whenComplete(() {
-      if (mounted) {
-        setState(() {
-          _isLoadingPagination = false;
-        });
-      }
-    });
-  }
-
-  // Phương thức để lấy dữ liệu của trang cụ thể
-  Future<void> _loadPageData(int pageIndex) async {
-    final tutorProvider = Provider.of<TutorProvider>(context, listen: false);
-    setState(() {
-      _isLoadingPagination = true;
-      _currentPage = pageIndex;
-    });
-
-    // Lấy dữ liệu cho trang hiện tại
-    await tutorProvider
-        .fetchTutorsByPage(pageIndex: pageIndex, pageSize: _pageSize)
-        .whenComplete(() {
-          if (mounted) {
-            setState(() {
-              _isLoadingPagination = false;
-            });
-          }
-        });
-  }
-
-  Future<void> _fetchCategories() async {
-    try {
-      setState(() {
-        _isLoadingPagination = true;
-      });
-
       final tutorProvider = Provider.of<TutorProvider>(context, listen: false);
-      await tutorProvider.fetchCategories().whenComplete(() {
-        if (mounted) {
-          setState(() {
-            _isLoadingPagination = false;
-          });
-        }
-      });
-    } catch (error) {
-      print('Error fetching categories: $error');
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoadingPagination = false;
-        });
-      }
-    }
+      tutorProvider.fetchTotalPages(pageSize: _pageSize);
+      tutorProvider.fetchCategories();
+    });
   }
 
-  // Hàm tìm kiếm
-  // Hàm tìm kiếm
-  void onSearch(
-    String tutorName,
-    List<String> specialities,
-    Map<String, bool> nationalities,
+  Future<void> loadDataPage(
+    int page,
+    String? search,
+    List<String>? specialities,
   ) async {
     setState(() {
       _isLoadingPagination = true;
@@ -147,60 +48,99 @@ class _ListTeacherPageState extends State<ListTeacherPage> {
 
     final tutorProvider = Provider.of<TutorProvider>(context, listen: false);
 
-    // Cập nhật lại các tham số tìm kiếm
-    _tutorName = tutorName;
-    _specialities = specialities;
-    _nationalities = nationalities;
+    // Kiểm tra xem bộ lọc có thay đổi không
+    bool filtersChanged = false;
+    if (search != _currentSearch || specialities != _currentSpecialities) {
+      filtersChanged = true;
+    }
 
-    // Tạo đối tượng tìm kiếm từ các tham số
-    final searchObject = createSearchObject(
-      tutorName,
-      specialities,
-      nationalities,
-    );
+    if (filtersChanged) {
+      tutorProvider.setCurrentPage(0);
+      page = 0;
+      _currentSearch = search;
+      _currentSpecialities = specialities;
+    }
 
-    print(searchObject);
+    try {
+      // Làm sạch dữ liệu cũ
+      tutorProvider
+          .clearTutors(); // Phương thức này xóa dữ liệu trong danh sách
 
-    if (mounted) {
+      // Tải lại dữ liệu
+      await tutorProvider.fetchTutorsByPage(
+        pageIndex: page,
+        pageSize: _pageSize,
+        search: _currentSearch,
+        specialities: _currentSpecialities,
+      );
+
+      // Cập nhật số trang
+      await tutorProvider.fetchTotalPages(pageSize: _pageSize);
+    } catch (error) {
+      _showErrorMessage(error.toString());
+    } finally {
       setState(() {
         _isLoadingPagination = false;
       });
     }
   }
 
+  void _showErrorMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  Future<void> _refreshData() async {
+    final tutorProvider = Provider.of<TutorProvider>(context, listen: false);
+    tutorProvider.resetState();
+    await loadDataPage(0, _currentSearch, _currentSpecialities);
+    await tutorProvider.fetchCategories();
+  }
+
   @override
   Widget build(BuildContext context) {
-    myColor = Theme.of(context).primaryColor;
-    mediaSize = MediaQuery.of(context).size;
-
     final tutorProvider = Provider.of<TutorProvider>(context);
 
     return Scaffold(
       backgroundColor: Colors.white,
-      endDrawer: CustomDrawer(),
-      appBar: CustomAppBar(),
+      endDrawer: const CustomDrawer(),
+      appBar: const CustomAppBar(),
       body: RefreshIndicator(
-        onRefresh: refreshHomePage,
+        onRefresh: _refreshData,
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Banner
+              const SizedBox(height: 16),
               BannerComponent(myColor: myColor),
-              // Truyền danh sách specialities vào FilterComponent
+
+              // FilterComponent với danh sách specialities
               FilterComponent(
-                onSearch: onSearch,
-                specialities:
-                    tutorProvider
-                        .categories, // Lấy danh sách chuyên ngành từ TutorProvider
+                onSearch: (
+                  String search,
+                  List<String> specialities,
+                  Map<String, bool> filters,
+                ) {
+                  loadDataPage(0, search, specialities);
+                },
+                specialities: tutorProvider.categories,
               ),
-              Container(
-                padding: const EdgeInsets.only(top: 12, left: 16, right: 16),
-                child: const Divider(
-                  height: 20,
-                  color: Color.fromRGBO(238, 238, 238, 60),
-                  thickness: 1,
-                ),
+
+              const SizedBox(height: 12),
+              const Divider(
+                height: 20,
+                color: Color.fromRGBO(238, 238, 238, 60),
+                thickness: 1,
               ),
+
               !_isLoadingPagination
                   ? ListTeacherComponent()
                   : const Padding(
@@ -208,17 +148,17 @@ class _ListTeacherPageState extends State<ListTeacherPage> {
                     child: Center(child: CircularProgressIndicator()),
                   ),
 
-              // Phân trang
               if (tutorProvider.totalPages > 0)
-                Container(
-                  alignment: Alignment.center,
+                Padding(
                   padding: const EdgeInsets.all(16),
                   child: NumberPaginator(
                     numberPages: tutorProvider.totalPages,
                     onPageChange: (int index) async {
-                      await _loadPageData(
+                      await loadDataPage(
                         index,
-                      ); // Load dữ liệu khi bấm phân trang
+                        _currentSearch,
+                        _currentSpecialities,
+                      );
                     },
                   ),
                 ),
@@ -229,25 +169,30 @@ class _ListTeacherPageState extends State<ListTeacherPage> {
     );
   }
 
-  Map<String, String> createSearchObject(
-    String tutorName,
-    List<String> specialities,
-    Map<String, bool> nationalities,
-  ) {
-    String nationality = '';
-    if (nationalities.isNotEmpty) {
-      nationality = nationalities.keys.join(', ');
+  Widget _buildContent(TutorProvider tutorProvider) {
+    if (_isLoadingPagination) {
+      return const Center(child: CircularProgressIndicator());
+    } else if (tutorProvider.tutors.isEmpty) {
+      return Center(
+        child: Text('No tutors found.', style: const TextStyle(fontSize: 16)),
+      );
+    } else {
+      return ListTeacherComponent();
     }
+  }
 
-    String specialityKey =
-        specialities.isEmpty || specialities.contains('All')
-            ? ''
-            : specialities.join(', ');
-
-    return {
-      'name': tutorName.isEmpty ? '' : tutorName,
-      'country': nationality.isEmpty ? '' : nationality,
-      'speciality': specialityKey.isEmpty ? '' : specialityKey,
-    };
+  Widget _buildPaginator(TutorProvider tutorProvider) {
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.all(16),
+      child: NumberPaginator(
+        numberPages:
+            tutorProvider.totalPages > 0 ? tutorProvider.totalPages : 1,
+        initialPage: tutorProvider.currentPage,
+        onPageChange: (int index) async {
+          await loadDataPage(index, _currentSearch, _currentSpecialities);
+        },
+      ),
+    );
   }
 }
