@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:lettutor/common/loading_overlay.dart';
 import 'package:lettutor/firebase_options.dart';
 import 'package:lettutor/l10n/app_localizations.dart';
+import 'package:lettutor/pages/courses_page/courses_page.dart';
+import 'package:lettutor/pages/detail_course_page/detail-course_page.dart';
 import 'package:lettutor/pages/list_teacher_page/list_teacher_page.dart';
 import 'package:lettutor/pages/login_page/login_page.dart';
 import 'package:lettutor/providers/auth_provider.dart';
@@ -59,7 +61,7 @@ class MyApp extends StatelessWidget {
                   splash: Image.asset(ImagesPath.logo),
                   nextScreen:
                       authProvider.currentUser != null
-                          ? LoadingOverlay(child: ListTeacherPage())
+                          ? LoadingOverlay(child: CoursesPage())
                           : LoadingOverlay(child: LoginPage()),
                   splashTransition: SplashTransition.fadeTransition,
                   pageTransitionType: PageTransitionType.bottomToTop,
