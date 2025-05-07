@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../../../data/model/courses/course.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../detail_lesson_page/detail-lesson_page.dart';
 //import '../../detailLessonPage/detail-lesson_page.dart';
 
 class CourseCardComponent extends StatelessWidget {
@@ -78,8 +79,7 @@ class CourseCardComponent extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             //TODO: Chưa có trang DetailLessonPage
-                            //builder: (context) => DetailLessonPage(),
-                            builder: (context) => Container(),
+                            builder: (context) => DetailLessonPage(),
                             settings: RouteSettings(
                               arguments: {'course': course, 'index': 0},
                             ),
