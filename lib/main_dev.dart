@@ -3,22 +3,34 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:lettutor/common/bottom_nav_bar.dart';
 import 'package:lettutor/common/loading_overlay.dart';
+import 'package:lettutor/data/services/noti_service.dart';
 import 'package:lettutor/firebase_options.dart';
 import 'package:lettutor/l10n/app_localizations.dart';
 import 'package:lettutor/pages/login_page/login_page.dart';
 import 'package:lettutor/providers/auth_provider.dart';
 import 'package:lettutor/providers/courses_provider.dart';
+import 'package:lettutor/providers/schedule_provider.dart';
 import 'package:lettutor/providers/setting_provider.dart';
 import 'package:lettutor/providers/tutor_provider.dart';
 import 'package:lettutor/providers/user_provider.dart';
 import 'package:lettutor/router/app_routes.dart';
 import 'package:lettutor/utilities/const.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Khởi tạo Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Khởi tạo dịch vụ thông báo
+  await LocalNotificationService().initialize();
+
+  // Yêu cầu quyền thông báo
+  await requestNotificationPermission();
+
   runApp(
     MultiProvider(
       providers: [
@@ -27,10 +39,25 @@ void main() async {
         ChangeNotifierProvider(create: (_) => TutorProvider()),
         ChangeNotifierProvider(create: (_) => CoursesProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => ScheduleProvider()),
       ],
       child: const MyApp(),
     ),
   );
+}
+
+Future<void> requestNotificationPermission() async {
+  PermissionStatus status = await Permission.notification.status;
+  if (!status.isGranted) {
+    PermissionStatus newStatus = await Permission.notification.request();
+    if (newStatus.isGranted) {
+      print("Notification permission granted!");
+    } else {
+      print("Notification permission denied!");
+    }
+  } else {
+    print("Notification permission already granted");
+  }
 }
 
 class MyApp extends StatelessWidget {

@@ -318,7 +318,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get goToMeeting => 'Vào lớp học';
 
   @override
-  String get hereIsAList => 'Đây là danh sách các lớp học dã được đặt. Bạn có thể theo dõi khi nào lớp học bắt đầu, vào lớp hoặc huỷ bỏ trước 2 tiếng';
+  String get hereIsAList => 'Đây là trang giúp bạn lên lịch học cá nhân. Hệ thống sẽ gửi thông báo nhắc nhở về các buổi học sắp tới để bạn không bỏ lỡ.';
 
   @override
   String get wentWrong => 'Rất tiếc đã xảy ra lỗi';

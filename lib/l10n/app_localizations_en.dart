@@ -318,7 +318,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get goToMeeting => 'Go to meeting';
 
   @override
-  String get hereIsAList => 'Here is a list of booked lessons. You can track when will the lesson starts, join the meeting or cancel before 2 hours';
+  String get hereIsAList => 'This is the page where you schedule your personal lessons. The system will send reminders about your upcoming sessions so you won\'t miss them.';
 
   @override
   String get wentWrong => 'Oops, something went wrong';

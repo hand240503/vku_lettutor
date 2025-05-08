@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/pages/courses_page/courses_page.dart';
 import 'package:lettutor/pages/list_teacher_page/list_teacher_page.dart';
+import 'package:lettutor/pages/schedule_page/schedule_page.dart'; // <-- import trang mới
 import 'package:lettutor/pages/settingsPage/setting_page.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
@@ -13,9 +14,6 @@ class BottomNavBar extends StatefulWidget {
 }
 
 class _BottomNavBarState extends State<BottomNavBar> {
-  // final PersistentTabController _controller = PersistentTabController(
-  //   initialIndex: 0,
-  // );
   final ValueNotifier<bool> _isVisible = ValueNotifier(true);
 
   PersistentBottomNavBarItem _buildNavItem({
@@ -35,12 +33,14 @@ class _BottomNavBarState extends State<BottomNavBar> {
     final screens = [
       const ListTeacherPage(),
       const CoursesPage(),
+      const SchedulePage(),
       const SettingPage(),
     ];
 
     final items = [
       _buildNavItem(icon: Icons.home, title: 'Home'),
       _buildNavItem(icon: Icons.school, title: 'Courses'),
+      _buildNavItem(icon: Icons.calendar_today, title: 'Schedule'),
       _buildNavItem(icon: Icons.settings, title: 'Settings'),
     ];
 
