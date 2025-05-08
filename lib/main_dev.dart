@@ -30,6 +30,7 @@ void main() async {
 
   // Yêu cầu quyền thông báo
   await requestNotificationPermission();
+  await requestExactAlarmPermission();
 
   runApp(
     MultiProvider(
@@ -57,6 +58,20 @@ Future<void> requestNotificationPermission() async {
     }
   } else {
     print("Notification permission already granted");
+  }
+}
+
+Future<void> requestExactAlarmPermission() async {
+  PermissionStatus status = await Permission.scheduleExactAlarm.status;
+  if (!status.isGranted) {
+    PermissionStatus newStatus = await Permission.scheduleExactAlarm.request();
+    if (newStatus.isGranted) {
+      print("Exact alarm permission granted!");
+    } else {
+      print("Exact alarm permission denied!");
+    }
+  } else {
+    print("Exact alarm permission already granted");
   }
 }
 

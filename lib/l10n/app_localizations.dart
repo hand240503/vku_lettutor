@@ -1306,6 +1306,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error updating profile'**
   String get errorUpdatingProfile;
+
+  /// No description provided for @youHaveScheduledLessons.
+  ///
+  /// In en, this message translates to:
+  /// **'You have scheduled lessons'**
+  String get youHaveScheduledLessons;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

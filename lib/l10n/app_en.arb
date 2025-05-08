@@ -213,5 +213,6 @@
   "firstName": "First Name",
   "lastName": "Last Name",
   "profileUpdatedSuccessfully": "Profile updated successfully",
-  "errorUpdatingProfile": "Error updating profile"
+  "errorUpdatingProfile": "Error updating profile",
+  "youHaveScheduledLessons": "You have scheduled lessons"
 }

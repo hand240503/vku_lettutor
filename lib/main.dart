@@ -60,11 +60,14 @@ class MyApp extends StatelessWidget {
         body: Center(
           child: ElevatedButton(
             onPressed: () async {
-              await LocalNotificationService().showNotification(
+              await LocalNotificationService().scheduleNotification(
                 id: 1,
                 title: 'Lịch học',
                 body: 'Đã đến giờ học của bạn!',
                 payload: 'Lịch học',
+                scheduledTime: DateTime.now().add(
+                  Duration(seconds: 10),
+                ),
               );
             },
             child: Text('Kiểm tra thông báo đã lên lịch'),

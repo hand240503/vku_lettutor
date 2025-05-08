@@ -5,6 +5,7 @@ import 'package:lettutor/common/drawer.dart';
 import 'package:lettutor/data/services/noti_service.dart';
 import 'package:lettutor/pages/schedule_page/components/info-page_component.dart';
 import 'package:lettutor/pages/schedule_page/components/task_cart.dart';
+import 'package:lettutor/providers/setting_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/schedule_provider.dart';
@@ -220,7 +221,11 @@ class _SchedulePageState extends State<SchedulePage> {
   }
 
   Future<void> _saveSchedule() async {
-    // Lưu lịch vào provider
+    // Kiểm tra nếu thông báo được bật trong SettingsProvider
+    final notificationsEnabled =
+        context.read<SettingsProvider>().notificationsEnabled;
+
+    // Lưu lịch vào provider dù có bật thông báo hay không
     await context.read<ScheduleProvider>().addSchedule(
       _startDate!,
       _endDate!,
@@ -228,15 +233,33 @@ class _SchedulePageState extends State<SchedulePage> {
     );
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Schedule saved successfully!')),
+      const SnackBar(content: Text('Lịch đã được lưu thành công!')),
     );
 
-    // Thêm thông báo cục bộ
+    // Nếu thông báo không được bật, chỉ dừng ở đây
+    if (!notificationsEnabled) {
+      return; // Không gửi thông báo nếu không được phép
+    }
+
+    // Gửi thông báo khi lịch đã được lưu
+    final notificationId = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     await LocalNotificationService().showNotification(
-      id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+      id: notificationId,
       title: 'Lịch mới',
       body: 'Bạn đã thêm lịch "${_nameController.text}" thành công!',
       payload: 'schedule_added',
+    );
+
+    final scheduleId = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    final scheduledTime = _startDate!.subtract(const Duration(minutes: 15));
+
+    // Lên lịch thông báo trước 15 phút khi bắt đầu lịch
+    await LocalNotificationService().scheduleNotification(
+      id: scheduleId,
+      title: 'Sắp đến giờ học!',
+      body: 'Lịch "${_nameController.text}" sẽ bắt đầu sau 15 phút!',
+      payload: 'schedule_reminder',
+      scheduledTime: scheduledTime,
     );
 
     setState(() {
@@ -250,10 +273,20 @@ class _SchedulePageState extends State<SchedulePage> {
 
   Future<void> _deleteSchedule(int index) async {
     final schedule = context.read<ScheduleProvider>().schedules[index];
+
+    // Kiểm tra nếu thông báo được bật trong SettingsProvider
+    final notificationsEnabled =
+        context.read<SettingsProvider>().notificationsEnabled;
+
+    // Xóa lịch khỏi provider
     await context.read<ScheduleProvider>().removeSchedule(index);
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Schedule deleted successfully!')),
+      const SnackBar(content: Text('Lịch đã được xóa thành công!')),
     );
+
+    if (!notificationsEnabled) {
+      return;
+    }
 
     await LocalNotificationService().showNotification(
       id: DateTime.now().millisecondsSinceEpoch ~/ 1000,

@@ -613,4 +613,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get errorUpdatingProfile => 'Lỗi cập nhật hồ sơ';
+
+  @override
+  String get youHaveScheduledLessons => 'Bạn có lịch học đã lên lịch';
 }

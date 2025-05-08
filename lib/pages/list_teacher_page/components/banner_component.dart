@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lettutor/providers/schedule_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../../../l10n/app_localizations.dart';
 
@@ -15,7 +17,8 @@ class BannerComponent extends StatefulWidget {
 class _BannerComponentState extends State<BannerComponent> {
   @override
   Widget build(BuildContext context) {
-    // BookingProvider bookingProvider = context.watch<BookingProvider>();
+    // Lấy số lượng lịch học từ ScheduleProvider
+    final totalSchedules = context.watch<ScheduleProvider>().totalSchedules;
 
     return Container(
       color: const Color.fromRGBO(7, 96, 191, 1.0),
@@ -33,75 +36,40 @@ class _BannerComponentState extends State<BannerComponent> {
             ),
           ),
           SizedBox(height: 16),
-          (false)
+          // Kiểm tra số lượng lịch học
+          totalSchedules > 0
               ? Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(width: 10),
-                  Expanded(child: buildTimer(context)),
-                  SizedBox(width: 10), // Adjusted this SizedBox
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // joinUpcomingMeeting(context);
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: WidgetStateProperty.all(
-                            Colors.white,
-                          ),
-                          elevation: WidgetStateProperty.all(4),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.ondemand_video, color: widget.myColor),
-                            const SizedBox(width: 8),
-                            Text(
-                              AppLocalizations.of(context)!.enterLessonRoom,
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: widget.myColor,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                  Text(
+                    AppLocalizations.of(context)!.youHaveScheduledLessons,
+                    style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      fontSize: 16,
+                      color: Colors.white,
                     ),
+                    textAlign: TextAlign.center,
                   ),
-                  SizedBox(width: 10),
                 ],
               )
               : Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
-                    child: Container(
-                      child: Text(
-                        AppLocalizations.of(context)!.noUpcomingLesson,
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
+                  Text(
+                    AppLocalizations.of(context)!.noUpcomingLesson,
+                    style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      fontSize: 16,
+                      color: Colors.white,
                     ),
+                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
           SizedBox(height: 16),
           Container(
             child: Text(
-              // (true)
-              "${AppLocalizations.of(context)!.totalLessonTime} 0",
-              // : '${AppLocalizations.of(context)!.totalLessonTime} ${bookingProvider.totalLessonTime}',
+              "${AppLocalizations.of(context)!.totalLessonTime} $totalSchedules",
               style: TextStyle(
                 fontWeight: FontWeight.normal,
                 fontSize: 16,
@@ -176,14 +144,4 @@ class _BannerComponentState extends State<BannerComponent> {
       ],
     );
   }
-
-  // void joinUpcomingMeeting(BuildContext context) {
-  //   BookingProvider bookingProvider = context.read<BookingProvider>();
-  //   Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //         builder: (context) =>
-  //             JoinMeetingPage(upcomingClass: bookingProvider.upcomingLesson!),
-  //       ));
-  // }
 }

@@ -613,4 +613,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorUpdatingProfile => 'Error updating profile';
+
+  @override
+  String get youHaveScheduledLessons => 'You have scheduled lessons';
 }
