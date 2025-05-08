@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lettutor/common/loading_overlay.dart';
 import 'package:lettutor/l10n/app_localizations.dart';
 import 'package:lettutor/providers/auth_provider.dart';
 import 'package:lettutor/providers/setting_provider.dart';
@@ -295,10 +296,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void handleLoginByAccount(AuthProvider authProvider) async {
-    setState(() {
-      isLoading = true;
-    });
-
+    LoadingOverlay.of(context).show();
     try {
       String email = emailController.text;
       String password = passwordController.text;
@@ -312,7 +310,7 @@ class _LoginPageState extends State<LoginPage> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text("Login successful")));
-        Navigator.pushNamed(context, '/bottomNavBar');
+        Navigator.pushNamed(context, AppRoutes.bottomNavBar);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -326,14 +324,12 @@ class _LoginPageState extends State<LoginPage> {
         context,
       ).showSnackBar(SnackBar(content: Text("An error occurred: $e")));
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      LoadingOverlay.of(context).hide();
     }
   }
 
   Widget _buildOtherLogin() {
-    // var authProvider = Provider.of<AuthProvider>(context, listen: false);
+    var authProvider = Provider.of<AuthProvider>(context, listen: false);
     return Center(
       child: Column(
         children: [
@@ -342,18 +338,21 @@ class _LoginPageState extends State<LoginPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // GestureDetector(
+              //   onTap: () {},
+              //   child: Tab(
+              //     icon: SvgPicture.asset("lib/assets/images/facebook-logo.svg"),
+              //   ),
+              // ),
               GestureDetector(
-                onTap: () {},
-                child: Tab(
-                  icon: SvgPicture.asset("lib/assets/images/facebook-logo.svg"),
-                ),
-              ),
-              GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  _handleLoginGoogle(context);
+                },
                 child: Tab(
                   icon: SvgPicture.asset("lib/assets/images/google-logo.svg"),
                 ),
               ),
+
               // Padding(
               //   padding: const EdgeInsets.only(left: 6),
               //   child: MaterialButton(
@@ -407,5 +406,30 @@ class _LoginPageState extends State<LoginPage> {
         ],
       ),
     );
+  }
+
+  Future<void> _handleLoginGoogle(BuildContext context) async {
+    LoadingOverlay.of(context).show();
+    try {
+      var authProvider = Provider.of<AuthProvider>(context, listen: false);
+      await authProvider.loginWithGoogle(
+        onSuccess: (user) {
+          authProvider.saveLoginInfo(user);
+          Navigator.pushReplacementNamed(context, AppRoutes.bottomNavBar);
+        },
+        onFail: (error) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(error)));
+        },
+      );
+    } catch (e) {
+      // Xử lý ngoại lệ nếu có
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Login failed: ${e.toString()}')));
+    } finally {
+      LoadingOverlay.of(context).hide();
+    }
   }
 }
