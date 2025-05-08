@@ -716,7 +716,7 @@ abstract class AppLocalizations {
   /// No description provided for @hereIsAList.
   ///
   /// In en, this message translates to:
-  /// **'Here is a list of booked lessons. You can track when will the lesson starts, join the meeting or cancel before 2 hours'**
+  /// **'This is the page where you schedule your personal lessons. The system will send reminders about your upcoming sessions so you won\'t miss them.'**
   String get hereIsAList;
 
   /// No description provided for @wentWrong.
