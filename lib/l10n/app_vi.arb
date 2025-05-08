@@ -213,5 +213,6 @@
   "firstName": "Họ",
   "lastName": "Tên",
   "profileUpdatedSuccessfully": "Cập nhật hồ sơ thành công",
-  "errorUpdatingProfile": "Lỗi cập nhật hồ sơ"
+  "errorUpdatingProfile": "Lỗi cập nhật hồ sơ",
+  "coursesPostedByTutor": "Khóa học đã đăng"
 }

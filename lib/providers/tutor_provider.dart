@@ -4,11 +4,22 @@ import 'package:lettutor/data/model/tutor/tutor.dart';
 import 'package:lettutor/data/model/user/learn_topic.dart';
 import 'package:lettutor/data/repository/tutor/tutor_repository.dart';
 
+import '../data/model/courses/course.dart';
+
 class TutorProvider with ChangeNotifier {
   final TutorRepository _tutorRepository = TutorRepository();
 
   final List<Tutor> _tutors = [];
   List<Tutor> get tutors => _tutors;
+
+  List<Course> _courses = [];
+
+  List<Course> get courses => _courses;
+
+  void setCourses(List<Course> courses) {
+    _courses = courses;
+    notifyListeners();
+  }
 
   bool _hasMoreData = true;
   bool get hasMoreData => _hasMoreData;
@@ -168,5 +179,31 @@ class TutorProvider with ChangeNotifier {
   void clearTutors() {
     tutors.clear();
     notifyListeners();
+  }
+
+  Future<List<Course>> fetchTutorCourses(Tutor tutor) async {
+    if (tutor.courses == null || tutor.courses!.isEmpty) {
+      print("No courses available for tutor: ${tutor.name}");
+      return [];
+    }
+
+    List<Course> courses = [];
+
+    try {
+      for (var courseRef in tutor.courses!) {
+        try {
+          final courseDoc = await courseRef.get();
+          if (courseDoc.exists) {
+            courses.add(await Course.fromFirestore(courseDoc));
+          }
+        } catch (e) {
+          debugPrint('Error fetching individual course: $e');
+        }
+      }
+    } catch (e) {
+      debugPrint('Error in fetchTutorCourses: $e');
+    }
+
+    return courses;
   }
 }
