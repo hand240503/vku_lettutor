@@ -9,6 +9,7 @@ import 'package:lettutor/pages/profilePage/components/forgot_profile_page.dart';
 import 'package:lettutor/pages/profilePage/profile_page.dart';
 import 'package:lettutor/pages/schedule_page/schedule_page.dart';
 import 'package:lettutor/pages/sign-up_page/sign-up_page.dart';
+import '../pages/quiz_page/quiz_page.dart';
 
 class AppRoutes {
   static const String bottomNavBar          = '/bottomNavBar';
@@ -21,6 +22,7 @@ class AppRoutes {
   static const String profile               = '/profilePage';
   static const String forgotProfilePage     = '/forgotProfilePage';
   static const String schedulePage          = '/schedulePage';
+  static const String quizPage             = '/quizPage';
   static Map<String, WidgetBuilder> get routes {
     return {
       login:              (context) => const LoginPage(),
@@ -33,6 +35,7 @@ class AppRoutes {
       bottomNavBar:       (context) => const BottomNavBar(),
       forgotProfilePage:  (context) => const ForgotProfilePage(),
       schedulePage:       (context) => const SchedulePage(),
+      quizPage:          (context) => const QuizPage(),
     };
   }
 }

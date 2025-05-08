@@ -38,6 +38,8 @@ dependencies:
   page_transition: ^2.2.1
   app_settings : ^6.1.1
   syncfusion_flutter_calendar: ^29.1.41
+  cupertino_icons: ^1.0.8
+  ionicons: ^0.2.2
 
   # Media & Images
   flutter_svg: ^2.0.17
@@ -54,6 +56,7 @@ dependencies:
   flutter_launcher_icons: ^0.14.3
   permission_handler: ^12.0.0+1
   flutter_timezone: ^4.1.0
+  syncfusion_flutter_core: ^29.1.41
 
 dev_dependencies:
   flutter_test:

@@ -29,8 +29,9 @@ class _ListTeacherPageState extends State<ListTeacherPage> {
   void initState() {
     myColor = Colors.blue;
     super.initState();
-    loadDataPage(0, null, null);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      loadDataPage(0, null, null);
       final tutorProvider = Provider.of<TutorProvider>(context, listen: false);
       tutorProvider.fetchTotalPages(pageSize: _pageSize);
       tutorProvider.fetchCategories();
