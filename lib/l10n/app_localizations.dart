@@ -182,7 +182,7 @@ abstract class AppLocalizations {
   /// No description provided for @totalLessonTime.
   ///
   /// In en, this message translates to:
-  /// **'Total lesson time is '**
+  /// **'Scheduled class count'**
   String get totalLessonTime;
 
   /// No description provided for @findATutor.
@@ -1306,6 +1306,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error updating profile'**
   String get errorUpdatingProfile;
+
+  /// No description provided for @youHaveScheduledLessons.
+  ///
+  /// In en, this message translates to:
+  /// **'You have scheduled lessons'**
+  String get youHaveScheduledLessons;
 
   /// No description provided for @coursesPostedByTutor.
   ///

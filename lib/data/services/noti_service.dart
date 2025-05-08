@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -13,7 +15,12 @@ class LocalNotificationService {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+  bool _isInitialized = false;
+
   Future<void> initialize({Function(String?)? onSelectNotification}) async {
+    if (_isInitialized) return;
+    _isInitialized = true;
+
     // Android init
     const AndroidInitializationSettings androidSettings =
         AndroidInitializationSettings('app_icon');
@@ -41,9 +48,15 @@ class LocalNotificationService {
     );
 
     // Timezone init
-    tz.initializeTimeZones();
-    final String timeZoneName = tz.local.name;
-    tz.setLocalLocation(tz.getLocation(timeZoneName));
+    try {
+      tz.initializeTimeZones();
+      final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
+      tz.setLocalLocation(tz.getLocation(currentTimeZone));
+    } catch (e) {
+      if (kDebugMode) {
+        print('Timezone init error: $e');
+      }
+    }
   }
 
   Future<void> showNotification({
@@ -60,7 +73,7 @@ class LocalNotificationService {
           importance: Importance.max,
           priority: Priority.high,
         );
-    print('showNotification: $id, $title, $body, $payload');
+
     const NotificationDetails platformDetails = NotificationDetails(
       android: androidDetails,
     );
@@ -74,4 +87,35 @@ class LocalNotificationService {
     );
   }
 
+  Future<void> scheduleNotification({
+    required int id,
+    required String title,
+    required String body,
+    required DateTime scheduledTime,
+    String? payload,
+  }) async {
+    const AndroidNotificationDetails androidDetails =
+        AndroidNotificationDetails(
+          'scheduled_channel_id',
+          'Scheduled',
+          channelDescription: 'Scheduled channel',
+          importance: Importance.max,
+          priority: Priority.high,
+        );
+
+    const NotificationDetails platformDetails = NotificationDetails(
+      android: androidDetails,
+    );
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      id,
+      title,
+      body,
+      tz.TZDateTime.from(scheduledTime, tz.local),
+      platformDetails,
+      payload: payload,
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
+  }
 }

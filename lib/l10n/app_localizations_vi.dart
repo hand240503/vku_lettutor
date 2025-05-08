@@ -51,7 +51,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get noUpComingLesson => 'Bạn không có lớp học sắp tới';
 
   @override
-  String get totalLessonTime => 'Tổng thời gian học là ';
+  String get totalLessonTime => 'Số lịch học đã lên lịch';
 
   @override
   String get findATutor => 'Tìm gia sư';
@@ -613,6 +613,9 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get errorUpdatingProfile => 'Lỗi cập nhật hồ sơ';
+
+  @override
+  String get youHaveScheduledLessons => 'Bạn có lịch học đã lên lịch';
 
   @override
   String get coursesPostedByTutor => 'Khóa học đã đăng';

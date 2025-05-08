@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/l10n/app_localizations.dart';
 import 'package:lettutor/pages/courses_page/courses_page.dart';
 import 'package:lettutor/pages/list_teacher_page/list_teacher_page.dart';
 import 'package:lettutor/pages/schedule_page/schedule_page.dart'; // <-- import trang mới
@@ -6,7 +7,9 @@ import 'package:lettutor/pages/settingsPage/setting_page.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
 class BottomNavBar extends StatefulWidget {
-  static final PersistentTabController controller = PersistentTabController(initialIndex: 0);
+  static final PersistentTabController controller = PersistentTabController(
+    initialIndex: 0,
+  );
   const BottomNavBar({super.key});
 
   @override
@@ -38,10 +41,22 @@ class _BottomNavBarState extends State<BottomNavBar> {
     ];
 
     final items = [
-      _buildNavItem(icon: Icons.home, title: 'Home'),
-      _buildNavItem(icon: Icons.school, title: 'Courses'),
-      _buildNavItem(icon: Icons.calendar_today, title: 'Schedule'),
-      _buildNavItem(icon: Icons.settings, title: 'Settings'),
+      _buildNavItem(
+        icon: Icons.home,
+        title: AppLocalizations.of(context)!.home,
+      ),
+      _buildNavItem(
+        icon: Icons.school,
+        title: AppLocalizations.of(context)!.course,
+      ),
+      _buildNavItem(
+        icon: Icons.calendar_today,
+        title: AppLocalizations.of(context)!.schedule,
+      ),
+      _buildNavItem(
+        icon: Icons.settings,
+        title: AppLocalizations.of(context)!.settings,
+      ),
     ];
 
     return ValueListenableBuilder<bool>(

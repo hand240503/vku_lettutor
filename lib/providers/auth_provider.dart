@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/model/user/user.dart';
@@ -63,7 +64,6 @@ class AuthProvider extends ChangeNotifier {
     return await _authRepository.forgotPassword(email);
   }
 
-
   // Lưu thông tin người dùng vào `currentUser`
   void saveLoginInfo(User currentUser) {
     this.currentUser = currentUser;
@@ -74,6 +74,7 @@ class AuthProvider extends ChangeNotifier {
   // Xóa thông tin người dùng khi đăng xuất
   void clearUserInfo() async {
     await firebase_auth.FirebaseAuth.instance.signOut();
+    await GoogleSignIn().signOut();
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('user_data');
     currentUser = null;
@@ -121,4 +122,17 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> loginWithGoogle({
+    required Function(User user) onSuccess,
+    required Function(String error) onFail,
+  }) async {
+    try {
+      final user = await _authRepository.loginWithGoogle();
+      onSuccess(user);
+      notifyListeners();
+    } catch (error) {
+      debugPrint(error.toString());
+      onFail(error.toString());
+    }
+  }
 }

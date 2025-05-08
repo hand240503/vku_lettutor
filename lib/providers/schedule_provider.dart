@@ -75,4 +75,6 @@ class ScheduleProvider with ChangeNotifier {
             .toList();
     await prefs.setStringList('schedules', scheduleList);
   }
+
+  int get totalSchedules => _schedules.length;
 }

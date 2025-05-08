@@ -12,7 +12,12 @@
           "package_name": "com.example.lettutor"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "731785687567-fc37co2fv36cnm1kn596udfspa41n9sp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyA25J6o1OHUB43LcQuRvz-FgsndKoXd4d0"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "731785687567-fc37co2fv36cnm1kn596udfspa41n9sp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "731785687567-ir35v0a84o8i1un7m679jvvtcl5ljone.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.lettutor"
+              }
+            }
+          ]
         }
       }
     }

@@ -320,6 +320,7 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget _buildOtherLogin() {
+    var authProvider = Provider.of<AuthProvider>(context, listen: false);
     return Center(
       child: Column(
         children: [
@@ -328,34 +329,12 @@ class _SignUpPageState extends State<SignUpPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Tab(
-                icon: SvgPicture.asset("lib/assets/images/facebook-logo.svg"),
-              ),
-              Tab(icon: SvgPicture.asset("lib/assets/images/google-logo.svg")),
-              Padding(
-                padding: const EdgeInsets.only(left: 6),
-                child: MaterialButton(
-                  onPressed: () {},
-                  textColor: Colors.white,
-                  minWidth: 32,
-                  padding: const EdgeInsets.all(8),
-                  shape: CircleBorder(
-                    side: BorderSide(
-                      width: 1,
-                      style: BorderStyle.solid,
-                      color: myColor,
-                    ),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(
-                      10,
-                    ), // Adjust the radius as needed
-                    child: const Icon(
-                      Icons.phone_android,
-                      color: Colors.grey,
-                      size: 30,
-                    ),
-                  ),
+              GestureDetector(
+                onTap: () {
+                  _handleLoginGoogle(context);
+                },
+                child: Tab(
+                  icon: SvgPicture.asset("lib/assets/images/google-logo.svg"),
                 ),
               ),
             ],
@@ -363,16 +342,16 @@ class _SignUpPageState extends State<SignUpPage> {
           const SizedBox(height: 16),
           GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, AppRoutes.login);
+              Navigator.pop(context);
+              //TODO: Chưa có trang signUpPage
+              Navigator.pushNamed(context, AppRoutes.signUp);
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildGreyText(
-                  AppLocalizations.of(context)!.alreadyHaveAccount,
-                ),
+                _buildGreyText(AppLocalizations.of(context)!.dontHaveAccount),
                 Text(
-                  AppLocalizations.of(context)!.login,
+                  AppLocalizations.of(context)!.signUp,
                   style: TextStyle(
                     color: myColor,
                     fontSize: 12,
@@ -385,5 +364,27 @@ class _SignUpPageState extends State<SignUpPage> {
         ],
       ),
     );
+  }
+
+  Future<void> _handleLoginGoogle(BuildContext context) async {
+    try {
+      var authProvider = Provider.of<AuthProvider>(context, listen: false);
+      await authProvider.loginWithGoogle(
+        onSuccess: (user) {
+          authProvider.saveLoginInfo(user);
+          Navigator.pushReplacementNamed(context, AppRoutes.bottomNavBar);
+        },
+        onFail: (error) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Hủy đăng nhập bằng tài khoản Google")),
+          );
+        },
+      );
+    } catch (e) {
+      // Xử lý ngoại lệ nếu có
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Login failed: ${e.toString()}')));
+    }
   }
 }
