@@ -1306,6 +1306,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error updating profile'**
   String get errorUpdatingProfile;
+
+  /// No description provided for @coursesPostedByTutor.
+  ///
+  /// In en, this message translates to:
+  /// **'Courses posted'**
+  String get coursesPostedByTutor;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

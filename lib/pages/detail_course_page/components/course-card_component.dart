@@ -74,11 +74,12 @@ class CourseCardComponent extends StatelessWidget {
                   Container(
                     alignment: Alignment.center,
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: (course.topics == null || course.topics!.isEmpty)
+                          ? null
+                          : () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            //TODO: Chưa có trang DetailLessonPage
                             builder: (context) => DetailLessonPage(),
                             settings: RouteSettings(
                               arguments: {'course': course, 'index': 0},
@@ -88,9 +89,17 @@ class CourseCardComponent extends StatelessWidget {
                       },
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size(double.infinity, 40),
-                        backgroundColor: Colors.blueAccent,
+                        backgroundColor: (course.topics == null || course.topics!.isEmpty)
+                            ? Colors.grey
+                            : Colors.blueAccent,
                       ),
-                      child: Text(AppLocalizations.of(context)!.discover),
+                      child: Text(AppLocalizations.of(context)!.discover,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
                   ),
                 ],

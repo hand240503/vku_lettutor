@@ -8,6 +8,9 @@ import 'package:lettutor/providers/tutor_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../../providers/courses_provider.dart';
+import '../../courses_page/components/course-card.dart';
+
 class InfoComponent extends StatefulWidget {
   const InfoComponent({super.key, required this.tutor, required this.index});
   final Tutor tutor;
@@ -41,6 +44,33 @@ class _InfoComponentState extends State<InfoComponent> {
       looping: true,
       fullScreenByDefault: true,
     );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchTutorCourses();
+    });
+  }
+
+  Future<void> _fetchTutorCourses() async {
+    final tutorProvider = Provider.of<TutorProvider>(context, listen: false);
+
+    try {
+      if (widget.tutor.courses != null && widget.tutor.courses!.isNotEmpty) {
+        final courses = await tutorProvider.fetchTutorCourses(widget.tutor);
+        if (mounted) {
+          tutorProvider.setCourses(courses);
+        }
+      } else {
+        if (mounted) {
+          tutorProvider.setCourses([]);
+        }
+        debugPrint("No courses found for tutor: ${widget.tutor.name}");
+      }
+    } catch (e) {
+      debugPrint("Error fetching tutor courses: $e");
+      if (mounted) {
+        tutorProvider.setCourses([]);
+      }
+    }
   }
 
   @override
@@ -63,6 +93,7 @@ class _InfoComponentState extends State<InfoComponent> {
           const SizedBox(height: 20),
           _buildOtherInfo(),
           const SizedBox(height: 20),
+          _buildTutorCourses(context),
         ],
       ),
     );
@@ -392,4 +423,59 @@ class _InfoComponentState extends State<InfoComponent> {
       ],
     );
   }
+
+  Widget _buildTutorCourses(BuildContext context) {
+    TutorProvider tutorProvider = Provider.of<TutorProvider>(context, listen: true);
+
+    // Kiểm tra xem tutor có courses không
+    bool hasCourses = widget.tutor.courses != null && widget.tutor.courses!.isNotEmpty;
+
+    if (!hasCourses || tutorProvider.courses.isEmpty) {
+      return Container(
+        padding: EdgeInsets.symmetric(vertical: 20),
+        alignment: Alignment.center,
+        child: Text(
+          AppLocalizations.of(context)!.noTutorsAvailable,
+          style: TextStyle(
+            fontSize: 16,
+            fontStyle: FontStyle.italic,
+            color: Colors.grey,
+          ),
+        ),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            AppLocalizations.of(context)!.coursesPostedByTutor,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
+          ),
+        ),
+        SizedBox(height: 10),
+        ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: tutorProvider.courses.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: CourseCard(
+                  course: tutorProvider.courses[index],
+                  tabIndex: 0,
+                ),
+              );
+            }
+        ),
+      ],
+    );
+  }
 }
+

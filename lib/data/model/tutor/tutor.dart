@@ -17,6 +17,7 @@ class Tutor {
   String? bioUrl;
   String? interests;
   String? experience;
+  List<DocumentReference>? courses;
 
   Tutor({
     this.id,
@@ -35,6 +36,7 @@ class Tutor {
     this.bioUrl,
     this.interests,
     this.experience,
+    this.courses,
   });
 
   factory Tutor.fromFirestore(DocumentSnapshot doc) {
@@ -56,6 +58,10 @@ class Tutor {
       bioUrl: data['bioUrl'],
       interests: data['interests'],
       experience: data['experience'],
+      courses: data.containsKey('courses') && data['courses'] != null
+          ? (data['courses'] as List<dynamic>).map((course) =>
+      course as DocumentReference).toList()
+          : null,
     );
   }
 
@@ -76,11 +82,12 @@ class Tutor {
       'bioUrl': bioUrl,
       'interests': interests,
       'experience': experience,
+      'courses': courses,
     };
   }
 
   @override
   String toString() {
-    return 'Tutor(id: $id, email: $email, name: $name, avatar: $avatar, country: $country, phone: $phone, language: $language, isActivated: $isActivated, isOnline: $isOnline, rating: $rating, education: $education, speciality: $speciality, bio: $bio, bioUrl: $bioUrl, interests: $interests, experience: $experience)';
+    return 'Tutor{id: $id, name: $name, courses: $courses}';
   }
 }
