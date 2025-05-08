@@ -168,42 +168,42 @@ class _TutorTeacherCardState extends State<TutorTeacherCard> {
               ),
             ),
             SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: () {
-                //Navigator.pushNamed(context, '/schedulePage');
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  side: const BorderSide(
-                    width: 1,
-                    style: BorderStyle.solid,
-                    color: Colors.blue,
-                  ),
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-              ),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.add_card_rounded, // Use the book icon
-                    color: Colors.blue, // Icon color
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ), // Create a space between the icon and the text
-                  Text(
-                    'Book',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      color: Colors.blue,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     //Navigator.pushNamed(context, '/schedulePage');
+            //   },
+            //   style: ElevatedButton.styleFrom(
+            //     backgroundColor: Colors.white,
+            //     shape: RoundedRectangleBorder(
+            //       side: const BorderSide(
+            //         width: 1,
+            //         style: BorderStyle.solid,
+            //         color: Colors.blue,
+            //       ),
+            //       borderRadius: BorderRadius.circular(20.0),
+            //     ),
+            //   ),
+            //   child: const Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: [
+            //       Icon(
+            //         Icons.add_card_rounded, // Use the book icon
+            //         color: Colors.blue, // Icon color
+            //       ),
+            //       SizedBox(
+            //         width: 8,
+            //       ), // Create a space between the icon and the text
+            //       Text(
+            //         'Book',
+            //         textAlign: TextAlign.center,
+            //         style: TextStyle(
+            //           fontWeight: FontWeight.normal,
+            //           color: Colors.blue,
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
           ],
         ),
       ),
