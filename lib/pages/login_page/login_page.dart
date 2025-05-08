@@ -338,12 +338,6 @@ class _LoginPageState extends State<LoginPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // GestureDetector(
-              //   onTap: () {},
-              //   child: Tab(
-              //     icon: SvgPicture.asset("lib/assets/images/facebook-logo.svg"),
-              //   ),
-              // ),
               GestureDetector(
                 onTap: () {
                   _handleLoginGoogle(context);
@@ -352,33 +346,6 @@ class _LoginPageState extends State<LoginPage> {
                   icon: SvgPicture.asset("lib/assets/images/google-logo.svg"),
                 ),
               ),
-
-              // Padding(
-              //   padding: const EdgeInsets.only(left: 6),
-              //   child: MaterialButton(
-              //     onPressed: () {},
-              //     textColor: Colors.white,
-              //     minWidth: 32,
-              //     padding: const EdgeInsets.all(8),
-              //     shape: CircleBorder(
-              //       side: BorderSide(
-              //         width: 1,
-              //         style: BorderStyle.solid,
-              //         color: myColor,
-              //       ),
-              //     ),
-              //     child: ClipRRect(
-              //       borderRadius: BorderRadius.circular(
-              //         10,
-              //       ), // Adjust the radius as needed
-              //       child: const Icon(
-              //         Icons.phone_android,
-              //         color: Colors.grey,
-              //         size: 30,
-              //       ),
-              //     ),
-              //   ),
-              // ),
             ],
           ),
           const SizedBox(height: 16),
@@ -418,9 +385,9 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.pushReplacementNamed(context, AppRoutes.bottomNavBar);
         },
         onFail: (error) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(error)));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Hủy đăng nhập bằng tài khoản Google")),
+          );
         },
       );
     } catch (e) {

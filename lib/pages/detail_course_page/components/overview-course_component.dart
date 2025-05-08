@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/pages/quiz_page/quiz_page.dart';
 //import 'package:src/pages/detailLessonPage/detail-lesson_page.dart';
+import '../../../common/bottom_nav_bar.dart';
 import '../../../data/model/courses/course.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../utilities/const.dart';
@@ -96,16 +98,22 @@ class OverviewCourseComponent extends StatelessWidget {
   }
 
   Widget _buildListTopics(BuildContext context) {
+    final topicLength = course.topics?.length ?? 0;
+
     return ListView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      itemCount: course.topics?.length,
-      scrollDirection: Axis.vertical,
+      itemCount: topicLength + 1, // Thêm 1 cho Quiz Test
       itemBuilder: (BuildContext context, int index) {
-        return _buildItemList(index + 1, context);
+        if (index < topicLength) {
+          return _buildItemList(index + 1, context);
+        } else {
+          return _buildQuizItem(context, topicLength + 1);
+        }
       },
     );
   }
+
 
   Widget _buildItemList(int index, BuildContext context) {
     return InkWell(
@@ -123,40 +131,92 @@ class OverviewCourseComponent extends StatelessWidget {
         );
       },
       child: Container(
-        margin: EdgeInsets.only(top: 20, bottom: 20),
-        alignment: Alignment.centerLeft,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade200),
-          borderRadius: const BorderRadius.all(Radius.circular(5.0)),
-          color: Colors.grey.shade100,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 1,
-              blurRadius: 4,
-              offset: Offset(0, 1),
-            )
-          ],
-        ),
-        padding: EdgeInsets.only(left: 12, right: 12, top: 24, bottom: 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              index.toString(),
-              style: const TextStyle(color: Colors.black, fontSize: 16),
-            ),
-            SizedBox(height: 10),
-            Text(
-              course.topics?[index - 1].name ?? "No title",
-              style: TextStyle(
-                  color: Colors.grey.shade900,
-                  fontSize: 20,
-                  fontWeight: FontWeight.normal),
-            ),
-          ],
+        padding: EdgeInsets.only(top: 15, bottom: 15),
+        color: Colors.white,
+        child: Container(
+          alignment: Alignment.centerLeft,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade200),
+            borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+            color: Colors.grey.shade100,
+
+          ),
+          padding: EdgeInsets.only(left: 12, right: 12, top: 28, bottom: 28),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '$index.',
+                style: const TextStyle(color: Colors.black, fontSize: 17, fontFamily: 'TT Commons Pro Regular',),
+              ),
+              SizedBox(height: 10),
+              Text(
+                course.topics?[index - 1].name ?? "No title",
+                style: TextStyle(
+                    color: Colors.grey.shade900,
+                    fontSize: 17,
+                    fontWeight: FontWeight.normal,
+                  fontFamily: 'TT Commons Pro Regular',
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
+
+  Widget _buildQuizItem(BuildContext context, int index) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => QuizPage()
+          ),
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.only(top: 15, bottom: 15),
+        color: Colors.white,
+        child: Container(
+          alignment: Alignment.centerLeft,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.orangeAccent),
+            borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+            color: Colors.orange.shade50,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.orange.withOpacity(0.4),
+                spreadRadius: 1,
+                blurRadius: 4,
+                offset: Offset(0, 1),
+              )
+            ],
+          ),
+          padding: EdgeInsets.only(left: 12, right: 12, top: 28, bottom: 28),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '$index.',
+                style: const TextStyle(color: Colors.black, fontSize: 17,fontFamily: 'TT Commons Pro Regular',),
+              ),
+              SizedBox(height: 10),
+              Text(
+                "🎯 Quiz Test",
+                style: TextStyle(
+                  color: Colors.deepOrange,
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'TT Commons Pro Regular',
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
 }

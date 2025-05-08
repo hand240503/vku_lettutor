@@ -14,7 +14,7 @@
   "upComingLesson": "Lớp học sắp tới",
   "meetingIsReady": "Lớp học đã sẵn sàng...",
   "noUpComingLesson": "Bạn không có lớp học sắp tới",
-  "totalLessonTime": "Tổng thời gian học là ",
+  "totalLessonTime": "Số lịch học đã lên lịch",
   "findATutor": "Tìm gia sư",
   "enterTutorName": "Nhập tên gia sư...",
   "selectAvailableTime": "Chọn thời gian học:",
@@ -214,5 +214,6 @@
   "lastName": "Tên",
   "profileUpdatedSuccessfully": "Cập nhật hồ sơ thành công",
   "errorUpdatingProfile": "Lỗi cập nhật hồ sơ",
-  "youHaveScheduledLessons": "Bạn có lịch học đã lên lịch"
+  "youHaveScheduledLessons": "Bạn có lịch học đã lên lịch",
+  "coursesPostedByTutor": "Khóa học đã đăng"
 }

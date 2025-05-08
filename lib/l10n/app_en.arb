@@ -15,7 +15,7 @@
   "upComingLesson": "Upcoming lesson",
   "meetingIsReady": "Meeting is ready...",
   "noUpComingLesson": "You have no upcoming lesson",
-  "totalLessonTime": "Total lesson time is ",
+  "totalLessonTime": "Scheduled class count",
   "findATutor": "Find a tutor",
   "enterTutorName": "Enter tutor name...",
   "selectAvailableTime": "Select available tutoring time:",
@@ -214,5 +214,6 @@
   "lastName": "Last Name",
   "profileUpdatedSuccessfully": "Profile updated successfully",
   "errorUpdatingProfile": "Error updating profile",
-  "youHaveScheduledLessons": "You have scheduled lessons"
+  "youHaveScheduledLessons": "You have scheduled lessons",
+  "coursesPostedByTutor": "Courses posted"
 }

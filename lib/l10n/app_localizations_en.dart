@@ -51,7 +51,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noUpComingLesson => 'You have no upcoming lesson';
 
   @override
-  String get totalLessonTime => 'Total lesson time is ';
+  String get totalLessonTime => 'Scheduled class count';
 
   @override
   String get findATutor => 'Find a tutor';
@@ -616,4 +616,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get youHaveScheduledLessons => 'You have scheduled lessons';
+
+  @override
+  String get coursesPostedByTutor => 'Courses posted';
 }

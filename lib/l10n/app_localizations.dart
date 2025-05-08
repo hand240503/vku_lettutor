@@ -182,7 +182,7 @@ abstract class AppLocalizations {
   /// No description provided for @totalLessonTime.
   ///
   /// In en, this message translates to:
-  /// **'Total lesson time is '**
+  /// **'Scheduled class count'**
   String get totalLessonTime;
 
   /// No description provided for @findATutor.
@@ -1312,6 +1312,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You have scheduled lessons'**
   String get youHaveScheduledLessons;
+
+  /// No description provided for @coursesPostedByTutor.
+  ///
+  /// In en, this message translates to:
+  /// **'Courses posted'**
+  String get coursesPostedByTutor;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
