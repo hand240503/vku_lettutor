@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "731785687567",
+    "project_id": "project-vku-3",
+    "storage_bucket": "project-vku-3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:731785687567:android:9fe28bd682f4558b3c297a",
+        "android_client_info": {
+          "package_name": "com.example.lettutor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "731785687567-fc37co2fv36cnm1kn596udfspa41n9sp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA25J6o1OHUB43LcQuRvz-FgsndKoXd4d0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "731785687567-fc37co2fv36cnm1kn596udfspa41n9sp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "731785687567-ir35v0a84o8i1un7m679jvvtcl5ljone.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.lettutor"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
