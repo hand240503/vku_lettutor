@@ -5,6 +5,7 @@ import 'package:lettutor/pages/settingsPage/setting_page.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
 class BottomNavBar extends StatefulWidget {
+  static final PersistentTabController controller = PersistentTabController(initialIndex: 0);
   const BottomNavBar({super.key});
 
   @override
@@ -12,9 +13,9 @@ class BottomNavBar extends StatefulWidget {
 }
 
 class _BottomNavBarState extends State<BottomNavBar> {
-  final PersistentTabController _controller = PersistentTabController(
-    initialIndex: 0,
-  );
+  // final PersistentTabController _controller = PersistentTabController(
+  //   initialIndex: 0,
+  // );
   final ValueNotifier<bool> _isVisible = ValueNotifier(true);
 
   PersistentBottomNavBarItem _buildNavItem({
@@ -48,7 +49,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
       builder: (context, isVisible, _) {
         return PersistentTabView(
           context,
-          controller: _controller,
+          controller: BottomNavBar.controller,
           screens: screens,
           items: items,
           navBarHeight: kBottomNavigationBarHeight,

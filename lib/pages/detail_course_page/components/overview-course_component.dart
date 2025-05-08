@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../data/model/courses/course.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../utilities/const.dart';
+import '../../detail_lesson_page/detail-lesson_page.dart';
 
 class OverviewCourseComponent extends StatelessWidget {
   const OverviewCourseComponent({super.key, required this.course});
@@ -114,8 +115,7 @@ class OverviewCourseComponent extends StatelessWidget {
           context,
           MaterialPageRoute(
             //TODO: Chưa có trang DetailLessonPage
-            //builder: (context) => DetailLessonPage(),
-            builder: (context) => Container(),
+            builder: (context) => DetailLessonPage(),
             settings: RouteSettings(
               arguments: {'course': course, 'index': index - 1},
             ),

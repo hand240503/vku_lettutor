@@ -6,6 +6,7 @@ import 'package:lettutor/pages/login_page/login_page.dart';
 import 'package:lettutor/router/app_routes.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:lettutor/common/bottom_nav_bar.dart';
 
 import '../providers/auth_provider.dart';
 
@@ -69,9 +70,9 @@ class CustomDrawer extends StatelessWidget {
               },
             ),
             onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, AppRoutes.courses);
+              Navigator.of(context, rootNavigator: true).pushNamed(AppRoutes.profile);
             },
+
           ),
           ListTile(
             title: Row(
@@ -89,8 +90,8 @@ class CustomDrawer extends StatelessWidget {
               ],
             ),
             onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, AppRoutes.courses);
+              BottomNavBar.controller.jumpToTab(1);
+              Navigator.of(context, rootNavigator: true).pushReplacementNamed(AppRoutes.bottomNavBar);
             },
           ),
           ListTile(

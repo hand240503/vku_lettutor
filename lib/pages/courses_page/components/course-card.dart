@@ -5,6 +5,7 @@ import 'package:lettutor/pages/detail_course_page/detail-course_page.dart';
 //import 'package:lettutor/pages/detailCoursePage/detail-course_page.dart';
 import 'package:lettutor/utilities/const.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class CourseCard extends StatefulWidget {
   const CourseCard({super.key, required this.course, required this.tabIndex});
@@ -33,20 +34,30 @@ class _CourseCardState extends State<CourseCard> {
             ),
           );
         } else{
-
-          final Uri _url = Uri.parse(widget.course.fileUrl!);
-          if (!await launchUrl(_url)) {
-            // Show message error
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("Loading url failed"),
-                backgroundColor: Colors.red,
-                behavior: SnackBarBehavior.floating,
-                duration: Duration(seconds: 2),
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Scaffold(
+                appBar: AppBar(
+                  title: Text(widget.course.name ?? "Course Document"),
+                  leading: IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+                body: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: SfPdfViewer.network(
+                    widget.course.fileUrl!,
+                    canShowPaginationDialog: true,
+                    canShowScrollHead: true,
+                    enableDoubleTapZooming: true,
+                  ),
+                ),
               ),
-            );
-
-          }
+            ),
+          );
         }
       },
       child: Card(
