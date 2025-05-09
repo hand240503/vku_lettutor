@@ -344,14 +344,16 @@ class _SignUpPageState extends State<SignUpPage> {
             onTap: () {
               Navigator.pop(context);
               //TODO: Chưa có trang signUpPage
-              Navigator.pushNamed(context, AppRoutes.signUp);
+              Navigator.pushNamed(context, AppRoutes.login);
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildGreyText(AppLocalizations.of(context)!.dontHaveAccount),
+                _buildGreyText(
+                  AppLocalizations.of(context)!.alreadyHaveAccount,
+                ),
                 Text(
-                  AppLocalizations.of(context)!.signUp,
+                  AppLocalizations.of(context)!.login,
                   style: TextStyle(
                     color: myColor,
                     fontSize: 12,
